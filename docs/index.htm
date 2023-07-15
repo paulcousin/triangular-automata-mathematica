@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
+        "HTMLFiles/xhtml-math11-f.dtd">
+
+<!-- Created with the Wolfram Language : www.wolfram.com -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <title>
+  TriangularAutomataDemonstration
+ </title>
+ <link href="HTMLFiles/index.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<p class='Title' style='text-align: center;'>
+ Triangular Automata<br />Package Demonstration
+</p>
+
+
+
+<p class="Abstract">
+ This notebook demonstrates how to use the functions of the Triangular Automata package to compute and display cellular automata in an infinite triangular grid.
+</p>
+
+
+
+<p class="Author">
+ Paul Cousin<br /><span><a href="https://orcid.org/0000-0002-3866-7615"><span class="HyperlinkInline">https://orcid.org/0000-0002-3866-7615</span></a></span>
+</p>
+
+
+
+<p class="Section">
+ Introduction
+</p>
+
+
+
+<p class="Text">
+ Triangular Automata is a short name for cellular automata in a triangular grid. With this package, you will be able to play with them in a simple and efficient way. More details and informations can be found at: <span><a href="https://paulcousin.github.io/triangular-automata"><span class="HyperlinkInline">https://paulcousin.github.io/triangular-automata</span></a></span><br /><br />First, let&rsquo;s import the package:
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_1.png" alt="index_1.png" width="395" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Section">
+ Rules
+</p>
+
+
+
+<p class="Text">
+ In this package, only a subset of possible Triangular Automata is considered. Here are the restrictions:
+</p>
+
+
+
+<p class="ItemNumbered">
+ binary states: <span><span>s&isin;{0&equiv;<span style='font-style: italic;'>dead</span>&equiv;<span><img src="HTMLFiles/index_2.gif" alt="index_2.gif" width="13" height="19" style="vertical-align:middle" /></span>, 1&equiv;<span style='font-style: italic;'>alive</span>&equiv;<span><img src="HTMLFiles/index_3.gif" alt="index_3.gif" width="13" height="19" style="vertical-align:middle" /></span>}</span></span>
+</p>
+
+
+
+<p class="ItemNumbered">
+ only the first neighborhood is taken into account
+</p>
+
+
+
+<p class="ItemNumbered">
+ orientation of the neighbors is not considered
+</p>
+
+
+
+<p class="Text">
+ This means that there are only 8 possible local configurations that can be plotted with <span style='font-weight: bold;'>TAConfigurationPlot</span>.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_4.png" alt="index_4.png" width="546" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_5.gif" alt="index_5.gif" width="360" height="87" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ A rule must the specify for every configuration, if the cell is going to be dead or alive at&nbsp;&nbsp;<span><em>t</em><em>+</em><em>1</em></span>. There are thus only <span><span><img src="HTMLFiles/index_6.png" alt="index_6.png" width="49" height="19" style="vertical-align:middle" /></span></span> rules which map a configuration to as future state. These rules can for indexed by a unique rule number <span><em>n</em></span> in the Wolfram Code style.
+</p>
+
+
+
+<p class='Input' style='text-align: center;'>
+ <img src="HTMLFiles/index_7.png" alt="index_7.png" width="80" height="43" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ Rule can be plotted with the <span style='font-weight: bold;'>TARulePlot</span> function.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_8.png" alt="index_8.png" width="252" height="17" style="vertical-align:middle" />
+</p>
+
+<table class='Output'>
+ <tr style='vertical-align: baseline;'>
+  <td style='text-align: center;'><span><img src="HTMLFiles/index_9.png" alt="index_9.png" width="106" height="20" style="vertical-align:middle" /></span></td>
+ </tr>
+ <tr style='vertical-align: baseline;'>
+  <td style='text-align: center;'><span><img src="HTMLFiles/index_10.gif" alt="index_10.gif" width="512" height="155" style="vertical-align:middle" /></span></td>
+ </tr>
+</table>
+
+<p class="Text">
+ The &ldquo;Labeled&rdquo; option&nbsp;&nbsp;adds the rule number in base 10 and in base 2 as a title. We see that the behavior of the rule is capture in its binary digits. Starting from the right, they indicate the future state for each configuration as they have been ordered previously.
+</p>
+
+
+
+<p class="Section">
+ Starting Points
+</p>
+
+
+
+<p class="Text">
+ Grids have a special format. They are captured in a list with three elements: an adjacency matrix, a state vector and a coordinates vector. The first two are in the <span style='font-weight: bold;'>SparseArray</span> format.<br /><br />To simplify things, this package provides few starting points ready to use:
+</p>
+
+
+
+<p class="ItemNumbered">
+ <span style='font-weight: bold;'>TAStartOneAlive</span>: a grid with only one alive cell at the center
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_11.png" alt="index_11.png" width="207" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_12.gif" alt="index_12.gif" width="180" height="180" style="vertical-align:middle" />
+</p>
+
+<p class="ItemNumbered">
+ <span style='font-weight: bold;'>TAStartLogo</span>: a grid with a logo that contains all 8 local configurations.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_13.png" alt="index_13.png" width="176" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_14.gif" alt="index_14.gif" width="180" height="180" style="vertical-align:middle" />
+</p>
+
+<p class="ItemNumbered">
+ <span style='font-weight: bold;'>TAStartRandom[n]</span>: a grid with cells randomly alive or dead on n layers.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_15.png" alt="index_15.png" width="215" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_16.gif" alt="index_16.gif" width="180" height="180" style="vertical-align:middle" />
+</p>
+
+<p class="Section">
+ Evolution
+</p>
+
+
+
+<p class="Text">
+ We can now evolve these grids with different rules. The most simple function to do so is <span style='font-weight: bold;'>TAEvolve</span>. Let&rsquo;s use it to evolve <span style='font-weight: bold;'>TAStartOneAlive</span> with rule 181.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_17.png" alt="index_17.png" width="324" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_18.gif" alt="index_18.gif" width="180" height="180" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ As expected from the earlier plot of rule 181, the environment has become alive and we have three dead cell surrounding a central alive cell. It would be nice to see what will happen after that. The function TANestEvolve can be used to jump ahead several time steps. Let&rsquo;s look at what <span style='font-weight: bold;'>TAStartOneAlive</span> will look like 64 time steps later when evolved by rule 181, with <span style='font-weight: bold;'>TANestEvolve</span>.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_19.png" alt="index_19.png" width="385" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_20.gif" alt="index_20.gif" width="180" height="180" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ With this function, all the intermediate steps are lost and we only get the last grid. <span style='font-weight: bold;'>TANestListEvolve</span> returns a list with all the intermediate steps.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_21.png" alt="index_21.png" width="737" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_22.gif" alt="index_22.gif" width="600" height="600" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ <span style='font-weight: bold;'>TAEvolutionPlot</span> shows an animated version of what we have just computed.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_23.png" alt="index_23.png" width="315" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_24.gif" alt="index_24.gif" width="404" height="436" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ Like with Wolfram&rsquo;s elementary automata, the grid evolution can be plotted all at once in 3D with <span style='font-weight: bold;'>TAEvolutionPlot3D</span>. You can rotate this plot to look at it from different angles.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_25.png" alt="index_25.png" width="331" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_26.gif" alt="index_26.gif" width="339" height="432" style="vertical-align:middle" />
+</p>
+
+<p class="Section">
+ Conclusion
+</p>
+
+
+
+<p class="Text">
+ I hope you will enjoy this package. Share what interesting things you find with it!
+</p>
+
+
+
+
+
+
+<div style="font-family:Helvetica; font-size:11px; width:100%; border:1px none #999999; border-top-style:solid; padding-top:2px; margin-top:20px;">
+ <a href="http://www.wolfram.com/language/" style="color:#000; text-decoration:none;">
+  <span style="color:#555555">Created with the Wolfram Language</span> 
+ </a>
+</div>
+</body>
+
+</html>

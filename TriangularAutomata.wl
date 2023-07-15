@@ -9,7 +9,8 @@
 
 
 (* ::Author:: *)
-(*Paul Cousin (https://orcid.org/0000-0002-3866-7615)*)
+(*Paul Cousin*)
+(*https://orcid.org/0000-0002-3866-7615*)
 
 
 (* ::Section:: *)
