@@ -308,7 +308,7 @@ If[OptionValue["Labeled"],
 
 
 (* ::Input::Initialization:: *)
-Options[TAGridPlot]={"ImageSize" -> Small,"Time"->Null};
+Options[TAGridPlot]={"ImageSize" -> Small,"Time"->Null, "Padding"->Automatic};
 
 TAGridPlot[grid_,OptionsPattern[]]:=Module[
 {x,stateVector=grid[[2]],coords3D=grid[[3]] . Transpose[\!\(\*
@@ -359,12 +359,15 @@ If[triangles1!={},AppendTo[graphicsList,Translate[triangle1,triangles1]]];
 If[triangles2!={},AppendTo[graphicsList,Translate[triangle2,triangles2]]];
 If[OptionValue["Time"]=!=Null,AppendTo[graphicsList,Text[Style[OptionValue["Time"],FontSize->Scaled@.06],Scaled[{.98,.01}],{Right,Bottom}]]];
 
-Return@
-Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
-	PlotRangePadding->{4,4},
-PlotRange->Norm@coords2D[[-1]],
-	ImageSize->OptionValue["ImageSize"]
+
+Return@Which[
+OptionValue["Padding"]===Automatic,
+	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
+PlotRangePadding->{4,4},PlotRange->Norm@coords2D[[-1]],ImageSize->OptionValue["ImageSize"]],
+OptionValue["Padding"]===None,
+Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],ImageSize->OptionValue["ImageSize"]]
 ];
+
 ]
 
 
@@ -388,8 +391,8 @@ AppendTo[grids,Last@grids];
 
 
 (* ::Input::Initialization:: *)
-TAGridPlot3D[grid_]:=Module[
-{x,level=layerFromCoords@grid[[3]] ,stateVector=grid[[2]],coords3D=grid[[3]] . Transpose[\!\(\*
+TAGridPlot3D[grid_,time_]:=Module[
+{x,level=time,stateVector=grid[[2]],coords3D=grid[[3]] . Transpose[\!\(\*
 TagBox[
 RowBox[{"(", GridBox[{
 {
@@ -441,18 +444,30 @@ Return@If[Union[shapes1,shapes2]=={},
 EmptyRegion[3],
 RegionUnion[Map[Translate[shape1,#]&,shapes1]\[Union]Map[Translate[shape2,#]&,shapes2]]
 ]
-]
-
-
-Options[TAEvolutionPlot3D]={"Mesh" -> False};
-
-TAEvolutionPlot3D[grid_,ruleNumber_,steps_, OptionsPattern[]]:=If[OptionValue["Mesh"],
-Return@RegionUnion[TAGridPlot3D/@TANestListEvolve[grid,ruleNumber,steps]],
-Return@Graphics3D[RegionUnion[TAGridPlot3D/@TANestListEvolve[grid,ruleNumber,steps]],Boxed->False]
 ];
 
 
-(* ::Subsection::Closed:: *)
+Options[TAEvolutionPlot3D]={"Mesh" -> False,"ImageSize"->Medium};
+
+TAEvolutionPlot3D[grid_,ruleNumber_,steps_, OptionsPattern[]]:=Module[
+	{regions,gridPlots},
+	
+	regions= TANestListEvolve[grid,ruleNumber,steps];
+	gridPlots=TAGridPlot3D[regions[[#]],#]&/@Range@Length@regions;
+
+	If[OptionValue["Mesh"],
+	Return@RegionUnion@gridPlots,
+	Return@Graphics3D[RegionUnion@gridPlots,
+		Boxed->False,
+		Method->{"ShrinkWrap" -> True},
+		ViewProjection->"Orthographic",
+		ViewPoint->{1,0,.75},
+		ViewVertical->{0,0,1},
+		ImageSize->OptionValue["ImageSize"]
+]]];
+
+
+(* ::Subsection:: *)
 (*Starting Points*)
 
 

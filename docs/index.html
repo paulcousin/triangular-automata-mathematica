@@ -7,7 +7,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
  <title>
-  TriangularAutomataDemonstration
+  TriangularAutomataDemonstration (the Wolfram Language : www.wolfram.com)
  </title>
  <link href="HTMLFiles/index.css" rel="stylesheet" type="text/css" />
 </head>
@@ -21,7 +21,7 @@
 
 
 <p class="Abstract">
- This notebook demonstrates how to use the functions of the Triangular Automata package to compute and display cellular automata in an infinite triangular grid.
+ This is a non-interactive version of a Mathematica notebook that demonstrates how to use the functions of the Triangular Automata package to compute and display cellular automata in an infinite triangular grid.<br /><span style='text-decoration: underline;'>Download the notebook</span>: <span><a href="https://github.com/paulcousin/triangular-automata-mathematica"><span class="HyperlinkInline">https://github.com/paulcousin/triangular-automata-mathematica</span></a></span> <br /><span style='text-decoration: underline;'>More information</span>: <span><a href="https://paulcousin.github.io/triangular-automata"><span class="HyperlinkInline">https://paulcousin.github.io/triangular-automata</span></a></span>
 </p>
 
 
@@ -39,7 +39,19 @@
 
 
 <p class="Text">
- Triangular Automata is a short name for cellular automata in a triangular grid. With this package, you will be able to play with them in a simple and efficient way. More details and informations can be found at: <span><a href="https://paulcousin.github.io/triangular-automata"><span class="HyperlinkInline">https://paulcousin.github.io/triangular-automata</span></a></span><br /><br />First, let&rsquo;s import the package:
+ <span style='font-weight: bold;'>Triangular Automata</span> (TA) is a short name for cellular automata in a triangular grid. This package allows you to experiment with TA in a simple and efficient way.
+</p>
+
+
+
+<p class="Section">
+ Setup
+</p>
+
+
+
+<p class="Text">
+ First, download the package from GitHub: <span><a href="https://github.com/paulcousin/triangular-automata-mathematica"><span class="HyperlinkInline">https://github.com/paulcousin/triangular-automata-mathematica</span></a></span><br /><br />To import it, place the <span style='font-weight: bold;'>TriangularAutomata.wl</span> file in the same folder as your notebook and use the following command.
 </p>
 
 
@@ -55,13 +67,13 @@
 
 
 <p class="Text">
- In this package, only a subset of possible Triangular Automata is considered. Here are the restrictions:
+ In this package, only a subset of possible TA called <span style='font-weight: bold;'>Elementary Triangular Automata</span> (ETA) is considered. <br /><br /><span style='text-decoration: underline;'>The restrictions are</span>:
 </p>
 
 
 
 <p class="ItemNumbered">
- binary states: <span><span>s&isin;{0&equiv;<span style='font-style: italic;'>dead</span>&equiv;<span><img src="HTMLFiles/index_2.gif" alt="index_2.gif" width="13" height="19" style="vertical-align:middle" /></span>, 1&equiv;<span style='font-style: italic;'>alive</span>&equiv;<span><img src="HTMLFiles/index_3.gif" alt="index_3.gif" width="13" height="19" style="vertical-align:middle" /></span>}</span></span>
+ binary states:&nbsp;&nbsp;<span><span><img src="HTMLFiles/index_2.gif" alt="index_2.gif" width="248" height="28" style="vertical-align:middle" /></span></span>
 </p>
 
 
@@ -79,50 +91,50 @@
 
 
 <p class="Text">
- This means that there are only 8 possible local configurations that can be plotted with <span style='font-weight: bold;'>TAConfigurationPlot</span>.
+ <br />This means that there are only 8 possible local configurations. They can be plotted with <span style='font-weight: bold;'>TAConfigurationPlot</span>.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_4.png" alt="index_4.png" width="546" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_3.png" alt="index_3.png" width="546" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_5.gif" alt="index_5.gif" width="360" height="87" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_4.gif" alt="index_4.gif" width="360" height="87" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
- A rule must the specify for every configuration, if the cell is going to be dead or alive at&nbsp;&nbsp;<span><em>t</em><em>+</em><em>1</em></span>. There are thus only <span><span><img src="HTMLFiles/index_6.png" alt="index_6.png" width="49" height="19" style="vertical-align:middle" /></span></span> rules which map a configuration to as future state. These rules can for indexed by a unique rule number <span><em>n</em></span> in the Wolfram Code style.
+ A rule must the specify for every configuration, if the cell is going to be dead or alive at&nbsp;&nbsp;<span><em>t</em><em>+</em><em>1</em></span>. There are thus only <span><span><img src="HTMLFiles/index_5.png" alt="index_5.png" width="49" height="19" style="vertical-align:middle" /></span></span> rules. These rules can be indexed by a unique rule number <span><em>n</em></span> in the Wolfram Code style.
 </p>
 
 
 
 <p class='Input' style='text-align: center;'>
- <img src="HTMLFiles/index_7.png" alt="index_7.png" width="80" height="43" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_6.png" alt="index_6.png" width="80" height="43" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
- Rule can be plotted with the <span style='font-weight: bold;'>TARulePlot</span> function.
+ Rules can be plotted with the <span style='font-weight: bold;'>TARulePlot</span> function.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_8.png" alt="index_8.png" width="252" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_7.png" alt="index_7.png" width="252" height="17" style="vertical-align:middle" />
 </p>
 
 <table class='Output'>
  <tr style='vertical-align: baseline;'>
-  <td style='text-align: center;'><span><img src="HTMLFiles/index_9.png" alt="index_9.png" width="106" height="20" style="vertical-align:middle" /></span></td>
+  <td style='text-align: center;'><span><img src="HTMLFiles/index_8.png" alt="index_8.png" width="106" height="20" style="vertical-align:middle" /></span></td>
  </tr>
  <tr style='vertical-align: baseline;'>
-  <td style='text-align: center;'><span><img src="HTMLFiles/index_10.gif" alt="index_10.gif" width="512" height="155" style="vertical-align:middle" /></span></td>
+  <td style='text-align: center;'><span><img src="HTMLFiles/index_9.gif" alt="index_9.gif" width="512" height="155" style="vertical-align:middle" /></span></td>
  </tr>
 </table>
 
 <p class="Text">
- The &ldquo;Labeled&rdquo; option&nbsp;&nbsp;adds the rule number in base 10 and in base 2 as a title. We see that the behavior of the rule is capture in its binary digits. Starting from the right, they indicate the future state for each configuration as they have been ordered previously.
+ The &ldquo;Labeled&rdquo; option&nbsp;&nbsp;adds the rule number in base 10 and in base 2 as a title. We can see that the behavior of the rule is capture in its binary digits. Starting from the right, they indicate the future state for each configuration as they have been ordered previously.
 </p>
 
 
@@ -134,7 +146,7 @@
 
 
 <p class="Text">
- Grids have a special format. They are captured in a list with three elements: an adjacency matrix, a state vector and a coordinates vector. The first two are in the <span style='font-weight: bold;'>SparseArray</span> format.<br /><br />To simplify things, this package provides few starting points ready to use:
+ Grids have a special format. They are captured in a list with three elements: a precursor of the adjacency matrix, a state vector and a coordinates vector. The first two are in the <span style='font-weight: bold;'>SparseArray</span> format.<br /><br />To simplify things, this package provides few starting points ready to use:
 </p>
 
 
@@ -146,11 +158,11 @@
 
 
 <p class="Input">
- <img src="HTMLFiles/index_11.png" alt="index_11.png" width="207" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_10.png" alt="index_10.png" width="207" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_12.gif" alt="index_12.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_11.gif" alt="index_11.gif" width="180" height="180" style="vertical-align:middle" />
 </p>
 
 <p class="ItemNumbered">
@@ -160,11 +172,11 @@
 
 
 <p class="Input">
- <img src="HTMLFiles/index_13.png" alt="index_13.png" width="176" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_12.png" alt="index_12.png" width="176" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_14.gif" alt="index_14.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_13.gif" alt="index_13.gif" width="180" height="180" style="vertical-align:middle" />
 </p>
 
 <p class="ItemNumbered">
@@ -174,11 +186,11 @@
 
 
 <p class="Input">
- <img src="HTMLFiles/index_15.png" alt="index_15.png" width="215" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_14.png" alt="index_14.png" width="215" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_16.gif" alt="index_16.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_15.gif" alt="index_15.gif" width="180" height="180" style="vertical-align:middle" />
 </p>
 
 <p class="Section">
@@ -188,31 +200,31 @@
 
 
 <p class="Text">
- We can now evolve these grids with different rules. The most simple function to do so is <span style='font-weight: bold;'>TAEvolve</span>. Let&rsquo;s use it to evolve <span style='font-weight: bold;'>TAStartOneAlive</span> with rule 181.
+ We can now evolve these grids with different rules. The simplest function to do so is <span style='font-weight: bold;'>TAEvolve</span>. Let&rsquo;s use it to evolve <span style='font-weight: bold;'>TAStartOneAlive</span> with rule 181.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_17.png" alt="index_17.png" width="324" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_16.png" alt="index_16.png" width="324" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_18.gif" alt="index_18.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_17.gif" alt="index_17.gif" width="180" height="180" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
- As expected from the earlier plot of rule 181, the environment has become alive and we have three dead cell surrounding a central alive cell. It would be nice to see what will happen after that. The function TANestEvolve can be used to jump ahead several time steps. Let&rsquo;s look at what <span style='font-weight: bold;'>TAStartOneAlive</span> will look like 64 time steps later when evolved by rule 181, with <span style='font-weight: bold;'>TANestEvolve</span>.
+ As expected from the earlier plot of rule 181, the environment has become alive and we have three dead cells surrounding a central alive cell. It would be nice to see what will happen after that. The function <span style='font-weight: bold;'>TANestEvolve</span> can be used to jump ahead several time steps. Let&rsquo;s look at what <span style='font-weight: bold;'>TAStartOneAlive</span> will look like after 64 time steps of evolution with rule 181.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_19.png" alt="index_19.png" width="385" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_18.png" alt="index_18.png" width="385" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_20.gif" alt="index_20.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_19.gif" alt="index_19.gif" width="180" height="180" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
@@ -222,11 +234,11 @@
 
 
 <p class="Input">
- <img src="HTMLFiles/index_21.png" alt="index_21.png" width="737" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_20.png" alt="index_20.png" width="737" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_22.gif" alt="index_22.gif" width="600" height="600" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_21.gif" alt="index_21.gif" width="600" height="600" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
@@ -236,25 +248,25 @@
 
 
 <p class="Input">
- <img src="HTMLFiles/index_23.png" alt="index_23.png" width="315" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_22.png" alt="index_22.png" width="315" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_24.gif" alt="index_24.gif" width="404" height="436" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_23.gif" alt="index_23.gif" width="404" height="436" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
- Like with Wolfram&rsquo;s elementary automata, the grid evolution can be plotted all at once in 3D with <span style='font-weight: bold;'>TAEvolutionPlot3D</span>. You can rotate this plot to look at it from different angles.
+ Like with Wolfram&rsquo;s <span style='font-weight: bold;'>Elementary Automata</span>, the grid evolution can be plotted all at once. But since each instant takes place in a 2D space, seeing the evolution in a single plot requires 3 dimensions. This plot&nbsp;&nbsp;can be computed with <span style='font-weight: bold;'>TAEvolutionPlot3D</span>. You can rotate it (in Mathematica) to see what it looks like from different angles.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_25.png" alt="index_25.png" width="331" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_24.png" alt="index_24.png" width="331" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_26.gif" alt="index_26.gif" width="339" height="432" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_25.gif" alt="index_25.gif" width="360" height="387" style="vertical-align:middle" />
 </p>
 
 <p class="Section">
