@@ -68,11 +68,11 @@ Begin["`Private`"];
 aliveColor=RGBColor[0.5, 0, 0.5];deadColor=GrayLevel[1];unknownColor = GrayLevel[0.85];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Evolution*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Utilities*)
 
 
@@ -94,7 +94,7 @@ graphOrderFromLayer[layer_]:=1+3 (layer(layer+1))/2;
 
 
 TANegativeGrid[grid_]:={grid[[1]],
-1-grid[[2]],
+SparseArray@Normal@(1-grid[[2]]),
 grid[[3]]};
 
 TANegativeRule[ruleNumber_]:=FromDigits[1-Reverse@IntegerDigits[ruleNumber,2,8],2];
