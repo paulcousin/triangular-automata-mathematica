@@ -447,7 +447,7 @@ RegionUnion[Map[Translate[shape1,#]&,shapes1]\[Union]Map[Translate[shape2,#]&,sh
 ];
 
 
-Options[TAEvolutionPlot3D]={"Mesh" -> False,"ImageSize"->Medium, "ViewPoint"->{1,0,.75}};
+Options[TAEvolutionPlot3D]={"Mesh" -> False,"ImageSize"->Medium,"ViewPoint"->{1,0,.75},"ViewProjection"->"Orthographic"};
 
 TAEvolutionPlot3D[grid_,ruleNumber_,steps_, OptionsPattern[]]:=Module[
 	{regions,gridPlots},
@@ -460,7 +460,7 @@ TAEvolutionPlot3D[grid_,ruleNumber_,steps_, OptionsPattern[]]:=Module[
 	Return@Graphics3D[RegionUnion@gridPlots,
 		Boxed->False,
 		Method->{"ShrinkWrap" -> True},
-		ViewProjection->"Orthographic",
+		ViewProjection->OptionValue["ViewProjection"],
 		ViewPoint->OptionValue["ViewPoint"],
 		ViewVertical->{0,0,1},
 		ImageSize->OptionValue["ImageSize"]
