@@ -6,17 +6,17 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-VP7VB5SBD4"></script>
-        <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VP7VB5SBD4"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-        gtag('config', 'G-VP7VB5SBD4');
-        </script>
+    gtag('config', 'G-VP7VB5SBD4');
+    </script>
  <title>
-  Triangular Automata Demonstration
+  TriangularAutomataDemonstration (the Wolfram Language : www.wolfram.com)
  </title>
  <link href="HTMLFiles/index.css" rel="stylesheet" type="text/css" />
 </head>
@@ -24,31 +24,25 @@
 <body>
 
 <p class='Title' style='text-align: center;'>
- Triangular Automata<br />Package Demonstration
+ <span style='color: #800080;'>Triangular Automata</span>
+</p>
+
+
+
+<p class='Subtitle' style='color: #800080;text-align: center;'>
+ The 256 Elementary Cellular Automata of the 2D Plane
 </p>
 
 
 
 <p class="Abstract">
- This is a non-interactive version of a Mathematica notebook that demonstrates how to use the functions of the Triangular Automata package to compute and display cellular automata in an infinite triangular grid.<br /><span style='text-decoration: underline;'>Download the notebook</span>: <span><a href="https://github.com/paulcousin/triangular-automata-mathematica"><span class="HyperlinkInline">https://github.com/paulcousin/triangular-automata-mathematica</span></a></span> <br /><span style='text-decoration: underline;'>More information</span>: <span><a href="https://paulcousin.github.io/triangular-automata"><span class="HyperlinkInline">https://paulcousin.github.io/triangular-automata</span></a></span>
+ Triangular Automata (TA) stands for cellular automata in the triangular grid. This Mathematica notebook introduces the topic while demonstrating the functionalities of the <span style='font-weight: bold;'>Triangular Automata</span> package.<br /><span style='text-decoration: underline;'>Download this notebook</span>: <span><a href="https://github.com/paulcousin/triangular-automata-mathematica"><span class="HyperlinkInline">https://github.com/paulcousin/triangular-automata-mathematica</span></a></span><br /><span style='text-decoration: underline;'>More information</span>: <span><a href="https://paulcousin.github.io/triangular-automata"><span class="HyperlinkInline">https://paulcousin.github.io/triangular-automata</span></a></span>
 </p>
 
 
 
 <p class="Author">
- Paul Cousin<br /><span><a href="https://orcid.org/0000-0002-3866-7615"><span class="HyperlinkInline">https://orcid.org/0000-0002-3866-7615</span></a></span>
-</p>
-
-
-
-<p class="Section">
- Introduction
-</p>
-
-
-
-<p class="Text">
- <span style='font-weight: bold;'>Triangular Automata</span> (TA) is a short name for cellular automata in a triangular grid. This package allows you to experiment with TA in a simple and efficient way.
+ <span style='font-weight: bold;color: #800080;'>Paul Cousin</span><br /><span style='font-size: 16px;'><span><a href="https://orcid.org/0000-0002-3866-7615"><span class="HyperlinkInline">https://orcid.org/0000-0002-3866-7615</span></a></span></span>
 </p>
 
 
@@ -60,7 +54,7 @@
 
 
 <p class="Text">
-Run the following command to import the package and you should be good to go.
+ Run the following command to import the package.
 </p>
 
 
@@ -70,85 +64,131 @@ Run the following command to import the package and you should be good to go.
 </p>
 
 <p class="Section">
- Rules
+ Introduction
 </p>
 
 
 
 <p class="Text">
- In this package, only a subset of possible TA called <span style='font-weight: bold;'>Elementary Triangular Automata</span> (ETA) is considered. <br /><br /><span style='text-decoration: underline;'>The restrictions are</span>:
-</p>
-
-
-
-<p class="ItemNumbered">
- binary states:&nbsp;&nbsp;<span><span><img src="HTMLFiles/index_2.gif" alt="index_2.gif" width="248" height="28" style="vertical-align:middle" /></span></span>
-</p>
-
-
-
-<p class="ItemNumbered">
- only the first neighborhood is taken into account
-</p>
-
-
-
-<p class="ItemNumbered">
- orientation of the neighbors is not considered
-</p>
-
-
-
-<p class="Text">
- <br />This means that there are only 8 possible local configurations. They can be plotted with <span style='font-weight: bold;'>TAConfigurationPlot</span>.
-</p>
-
-
-
-<p class="Input">
- <img src="HTMLFiles/index_3.png" alt="index_3.png" width="546" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_4.gif" alt="index_4.gif" width="360" height="87" style="vertical-align:middle" />
-</p>
-
-<p class="Text">
- A rule must the specify for every configuration, if the cell is going to be dead or alive at&nbsp;&nbsp;<span><em>t</em><em>+</em><em>1</em></span>. There are thus only <span><span><img src="HTMLFiles/index_5.png" alt="index_5.png" width="49" height="19" style="vertical-align:middle" /></span></span> rules. These rules can be indexed by a unique rule number <span><em>n</em></span> in the Wolfram Code style.
+ Cellular automata in the triangular grid, or <span style='font-weight: bold;'>Triangular Automata</span> (TA) for short, have already been studied in a few papers [<span style='color: #800080;'>1-15</span>]. This work will focus on a natural subset of TA called <span style='font-weight: bold;'>Elementary Triangular Automata</span> (ETA). 
 </p>
 
 
 
 <p class='Input' style='text-align: center;'>
- <img src="HTMLFiles/index_6.png" alt="index_6.png" width="80" height="43" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_2.gif" alt="index_2.gif" width="465" height="81" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
- Rules can be plotted with the <span style='font-weight: bold;'>TARulePlot</span> function.
+ ETA cells hold only <span style='font-weight: bold;'>binary states</span>, each cell will thus either be:
+</p>
+
+
+
+<p class="Item">
+ &ldquo;alive&rdquo; and colored purple&nbsp;&nbsp;<span><span><img src="HTMLFiles/index_3.gif" alt="index_3.gif" width="16" height="22" style="vertical-align:middle" /></span></span>, with a state&nbsp;&nbsp;<span><em>s</em><em> </em><em>=</em><em> </em><em>1</em></span>
+</p>
+
+
+
+<p class="Item">
+ &ldquo;dead&rdquo; and colored white&nbsp;&nbsp;<span><span><img src="HTMLFiles/index_4.gif" alt="index_4.gif" width="18" height="23" style="vertical-align:middle" /></span></span>, with a state&nbsp;&nbsp;<span><em>s</em><em> </em><em>=</em><em> </em><em>0</em></span>
+</p>
+
+
+
+<p class="Text">
+ <br />ETA <span style='font-weight: bold;'>rules</span> determine the future state of a cell based on its current state and the states of its neighbors, regardless of their orientation. This results in only 8 possible local configurations. They can be plotted with <span style='font-weight: bold;color: #800080;'>TAConfigurationPlot</span>.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_7.png" alt="index_7.png" width="252" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_5.png" alt="index_5.png" width="473" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_6.gif" alt="index_6.gif" width="360" height="87" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ The package uses a graph-theoretical framework developed in a previous work on Graph-Rewriting Automata [<span style='color: #800080;'>18</span>]. The triangular grid will here be considered as a graph. This graph must be expanded at each time step to simulate an infinite grid. The <span style='font-weight: bold;'>region of influence</span> of a single cell grows in hexagonal layers. This is thus the most efficient way to expand the graph as well.
+</p>
+
+
+
+<p class='Text' style='text-align: center;'>
+ <img src="HTMLFiles/index_7.gif" alt="index_7.gif" width="457" height="254" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ It is useful to see the triangular grid as a graph because computing the evolution of ETA is made quite easy by properties of its <span style='font-weight: bold;'>adjacency matrix </span><span class="script">A</span> and <span style='font-weight: bold;'>state vector</span> <span class="script">S</span>. Every <span style='font-weight: bold;'>vertex</span> v of this graph will hold a <span style='font-weight: bold;'>state</span> s(v). The <span style='font-weight: bold;'>neighborhood</span> N(v) of a vertex is defined as the set of its adjacent vertices.
+</p>
+
+
+
+<p class='DisplayFormulaNumbered' style='text-align: center;'>
+ <span style='font-size: 16px;'><span><img src="HTMLFiles/index_8.png" alt="index_8.png" width="145" height="44" style="vertical-align:middle" /></span></span><span style='font-size: 16px;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style='font-size: 16px;'><span><img src="HTMLFiles/index_9.png" alt="index_9.png" width="104" height="21" style="vertical-align:middle" /></span></span>
+</p>
+
+
+
+<p class="Text">
+ The <span style='font-weight: bold;'>configuration</span> <span><em>c</em><em>(</em><em>v</em><em>)</em></span> of a vertex is a number which, when they are indexed as we previously did, can be expressed as follows:
+</p>
+
+
+
+<p class='DisplayFormulaNumbered' style='text-align: center;'>
+ <img src="HTMLFiles/index_10.png" alt="index_10.png" width="152" height="41" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ The space of possible ETA rules is finite. For each one of the 8 configurations, a rule must specify whether the vertex will be dead or alive at <span><em>t</em><em>+</em><em>1</em></span>. Consequently, there are only <span><span><img src="HTMLFiles/index_11.png" alt="index_11.png" width="49" height="19" style="vertical-align:middle" /></span></span> possible rules. For this reason, ETA can be seen as the two-dimensional counterpart of Wolfram&rsquo;s 256 Elementary Cellular Automata [<span style='color: #800080;'>16-17</span>]. Furthermore, the triangle is the regular polygon tiling 2D space with the smallest number of neighbors per cell. ETA are thus the most basic 2D cellular automata and have a fundamental aspect in this regard.<br /><br />Each <span style='font-weight: bold;'>rule</span> R is a map from <span style='font-weight: bold;'>configuration space</span> to <span style='font-weight: bold;'>state space</span>.
+</p>
+
+
+
+<p class='DisplayFormulaNumbered' style='text-align: center;'>
+ <img src="HTMLFiles/index_12.gif" alt="index_12.gif" width="201" height="42" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ Each rule can be labeled by a unique <span style='font-weight: bold;'>rule number</span> n. We will use the labeling system which was independently proposed in references [<span style='color: #800080;'>7</span>] and [<span style='color: #800080;'>18</span>], since it must be somewhat natural and because it has useful properties. 
+</p>
+
+
+
+<p class='DisplayFormulaNumbered' style='text-align: center;'>
+ <img src="HTMLFiles/index_13.png" alt="index_13.png" width="85" height="49" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ This system, inspired by the Wolfram code [<span style='color: #800080;'>16</span>], is such that a rule number in its binary form displays the behavior of the rule. Starting from the right, its digits indicate the future state for each configuration as they have been ordered previously. Rules can be plotted with the <span style='font-weight: bold;color: #800080;'>TARulePlot</span> function.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_14.png" alt="index_14.png" width="252" height="17" style="vertical-align:middle" />
 </p>
 
 <table class='Output'>
  <tr style='vertical-align: baseline;'>
-  <td style='text-align: center;'><span><img src="HTMLFiles/index_8.png" alt="index_8.png" width="106" height="20" style="vertical-align:middle" /></span></td>
+  <td style='text-align: center;'><span><img src="HTMLFiles/index_15.png" alt="index_15.png" width="106" height="20" style="vertical-align:middle" /></span></td>
  </tr>
  <tr style='vertical-align: baseline;'>
-  <td style='text-align: center;'><span><img src="HTMLFiles/index_9.gif" alt="index_9.gif" width="512" height="155" style="vertical-align:middle" /></span></td>
+  <td style='text-align: center;'><span><img src="HTMLFiles/index_16.gif" alt="index_16.gif" width="512" height="155" style="vertical-align:middle" /></span></td>
  </tr>
 </table>
 
-<p class="Text">
- The &ldquo;Labeled&rdquo; option&nbsp;&nbsp;adds the rule number in base 10 and in base 2 as a title. We can see that the behavior of the rule is capture in its binary digits. Starting from the right, they indicate the future state for each configuration as they have been ordered previously.
+<p class="Section">
+ Basic functions
 </p>
 
 
 
-<p class="Section">
+<p class="Subsection">
  Starting Points
 </p>
 
@@ -161,191 +201,591 @@ Run the following command to import the package and you should be good to go.
 
 
 <p class="ItemNumbered">
- <span style='font-weight: bold;'>TAStartOneAlive</span>: a grid with only one alive cell at the center
+ <span style='font-weight: bold;color: #800080;'>TAStartOneAlive</span>: a grid with only one alive cell at the center
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_10.png" alt="index_10.png" width="207" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_17.png" alt="index_17.png" width="207" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_11.gif" alt="index_11.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_18.gif" alt="index_18.gif" width="180" height="180" style="vertical-align:middle" />
 </p>
 
 <p class="ItemNumbered">
- <span style='font-weight: bold;'>TAStartLogo</span>: a grid with a logo that contains all 8 local configurations.
+ <span style='font-weight: bold;color: #800080;'>TAStartLogo</span>: a grid with a logo that contains all 8 local configurations.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_12.png" alt="index_12.png" width="176" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_19.png" alt="index_19.png" width="176" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_13.gif" alt="index_13.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_20.gif" alt="index_20.gif" width="180" height="180" style="vertical-align:middle" />
 </p>
 
 <p class="ItemNumbered">
- <span style='font-weight: bold;'>TAStartRandom[n]</span>: a grid with cells randomly alive or dead on n layers.
+ <span style='font-weight: bold;color: #800080;'>TAStartRandom[n]</span>: a grid with cells that are randomly either alive or dead on n layers.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_14.png" alt="index_14.png" width="215" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_21.png" alt="index_21.png" width="215" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_15.gif" alt="index_15.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_22.gif" alt="index_22.gif" width="180" height="180" style="vertical-align:middle" />
 </p>
 
-<p class="Section">
+<p class="Subsection">
  Evolution
 </p>
 
 
 
 <p class="Text">
- We can now evolve these grids with different rules. The simplest function to do so is <span style='font-weight: bold;'>TAEvolve</span>. Let&rsquo;s use it to evolve <span style='font-weight: bold;'>TAStartOneAlive</span> with rule 181.
+ We can evolve these grids with different rules using the function <span style='font-weight: bold;color: #800080;'>TAEvolve</span>. Let&rsquo;s try to evolve <span style='font-weight: bold;color: #800080;'>TAStartOneAlive</span> with rule 181.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_16.png" alt="index_16.png" width="324" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_23.png" alt="index_23.png" width="321" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_17.gif" alt="index_17.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_24.gif" alt="index_24.gif" width="180" height="180" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
- As expected from the earlier plot of rule 181, the environment has become alive and we have three dead cells surrounding a central alive cell. It would be nice to see what will happen after that. The function <span style='font-weight: bold;'>TANestEvolve</span> can be used to jump ahead several time steps. Let&rsquo;s look at what <span style='font-weight: bold;'>TAStartOneAlive</span> will look like after 64 time steps of evolution with rule 181.
+ As expected from the earlier plot of rule 181, the environment has become alive and we have three dead cells surrounding a central alive cell. It would be nice to see what will happen after that. The function <span style='font-weight: bold;color: #800080;'>TANestEvolve</span> can be used to jump ahead several time steps. Let&rsquo;s look at what <span style='font-weight: bold;color: #800080;'>TAStartOneAlive</span> will look like after 64 time steps of evolution with rule 181.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_18.png" alt="index_18.png" width="385" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_25.png" alt="index_25.png" width="385" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_19.gif" alt="index_19.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_26.gif" alt="index_26.gif" width="180" height="180" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
- With this function, all the intermediate steps are lost and we only get the last grid. <span style='font-weight: bold;'>TANestListEvolve</span> returns a list with all the intermediate steps.
+ With this function, all the intermediate steps are lost and we only get the last grid. <span style='font-weight: bold;color: #800080;'>TANestListEvolve</span> returns a list with all the intermediate steps.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_20.png" alt="index_20.png" width="737" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_27.png" alt="index_27.png" width="700" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_21.gif" alt="index_21.gif" width="600" height="600" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_28.gif" alt="index_28.gif" width="600" height="600" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
- <span style='font-weight: bold;'>TAEvolutionPlot</span> shows an animated version of what we have just computed.
+ <span style='font-weight: bold;color: #800080;'>TAEvolutionPlot</span> shows an animated version of what we have just computed.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_22.png" alt="index_22.png" width="315" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_29.png" alt="index_29.png" width="315" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_23.gif" alt="index_23.gif" width="404" height="436" style="vertical-align:middle" />
-</p>
-
-<p class="Text">
- Like with Wolfram&rsquo;s <span style='font-weight: bold;'>Elementary Automata</span>, the grid evolution can be plotted all at once. But since each instant takes place in a 2D space, seeing the evolution in a single plot requires 3 dimensions. This plot&nbsp;&nbsp;can be computed with <span style='font-weight: bold;'>TAEvolutionPlot3D</span>. You can rotate it (in Mathematica) to see what it looks like from different angles.
-</p>
-
-
-
-<p class="Input">
- <img src="HTMLFiles/index_24.png" alt="index_24.png" width="331" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_25.gif" alt="index_25.gif" width="360" height="387" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_30.gif" alt="index_30.gif" width="404" height="436" style="vertical-align:middle" />
 </p>
 
 <p class="Section">
- Negative
+ Behavior
 </p>
 
 
 
 <p class="Text">
- Two functions can help work in the <span style='font-weight: bold;'>negative</span> world, where states are swapped.
+ In this section, a preliminary study of ETA is presented to motivate a future, more in-depth analysis. It is of particular interest to see what happens to a single living cell under different ETA rules so most of the following figures will come from this starting point.
+</p>
+
+
+
+<p class="Subsection">
+ Beauty
+</p>
+
+
+
+<p class="Text">
+ One of the most striking aspects of these automata is their aesthetic quality, which cannot be better illustrated than by a few selected examples.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_31.png" alt="index_31.png" width="544" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_32.gif" alt="index_32.gif" width="576" height="576" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_33.png" alt="index_33.png" width="544" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_34.gif" alt="index_34.gif" width="576" height="576" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_35.png" alt="index_35.png" width="544" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_36.gif" alt="index_36.gif" width="576" height="576" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_37.png" alt="index_37.png" width="544" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_38.gif" alt="index_38.gif" width="576" height="576" style="vertical-align:middle" />
+</p>
+
+<p class="Subsection">
+ Chaos
+</p>
+
+
+
+<p class="Text">
+ Given the existing literature on cellular automata, it is quite expected to see some of these rules behave chaotically. The example of rule 53 confirms it. 
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_39.png" alt="index_39.png" width="110" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_40.gif" alt="index_40.gif" width="512" height="155" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ Starting from two randomly generated 64 layers wide grids that are completely similar except for the central cell, the trajectories strongly diverge.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_41.gif" alt="index_41.gif" width="361" height="60" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_42.gif" alt="index_42.gif" width="336" height="180" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_43.png" alt="index_43.png" width="874" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_44.gif" alt="index_44.gif" width="600" height="318" style="vertical-align:middle" />
+</p>
+
+<p class="Subsection">
+ Fractals
+</p>
+
+
+
+<p class="Text">
+ Some ETA rules produce remarkable scale-free structures. 
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_45.png" alt="index_45.png" width="544" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_46.gif" alt="index_46.gif" width="576" height="576" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_47.png" alt="index_47.png" width="551" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_48.gif" alt="index_48.gif" width="576" height="576" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_49.png" alt="index_49.png" width="544" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_50.gif" alt="index_50.gif" width="576" height="576" style="vertical-align:middle" />
+</p>
+
+<p class="Subsection">
+ Space-Time
+</p>
+
+
+
+<p class="Text">
+ Similar to the way Elementary Cellular Automata [<span style='color: #800080;'>16-17</span>] are most often represented, the evolution of an ETA can be displayed in one single plot. Here, an instant is two-dimensional, so adding the dimension of time creates a 3D structure. In these <span style='font-weight: bold;'>space-time plots</span>, time flows downward. The successive grids are stacked beneath each other, starting from the initial conditions at the top. To avoid the infinite planes created by an alive environment, we can display only the cells that have the opposite state to it at each time step. A lot of information is therefore lost. We do not see most of the internal structure and we cannot know the state of the environment. Nevertheless, this representation helps visualize some properties of ETA that are difficult to notice otherwise. For instance, certain rules create 3D space-time fractals.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_51.png" alt="index_51.png" width="772" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_52.gif" alt="index_52.gif" width="360" height="370" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ These plots can be exported to 3D software like Blender with the following code:
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_53.png" alt="index_53.png" width="664" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_54.gif" alt="index_54.gif" width="533" height="506" style="vertical-align:middle" />
+</p>
+
+<p class="Subsection">
+ Self-Reproduction
+</p>
+
+
+
+<p class="Text">
+ As mentioned in reference [<span style='color: #800080;'>15</span>], one of the original motivations for the development of cellular automata was to create a mathematical model of self-reproduction. Interestingly, 4 of the 256 ETA rules naturally reproduce any finite pattern given as initial conditions: rules <span style='font-weight: bold;'>85</span>, <span style='font-weight: bold;'>90</span>, <span style='font-weight: bold;'>165</span> and <span style='font-weight: bold;'>170</span>. A proof of self-reproduction based on path counting already exists for rule 170 [<span style='color: #800080;'>15</span>]. Similarly spirited proofs could probably be proposed for the others.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_55.png" alt="index_55.png" width="291" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_56.gif" alt="index_56.gif" width="404" height="436" style="vertical-align:middle" />
+</p>
+
+<p class="Subsection">
+ Noise
+</p>
+
+
+
+<p class="Text">
+ Some rules seem to generate a pretty good noise. For example, if we pick a simple starting point without symmetries, rule 37 will usually turn it into an expanding disk with a random-looking interior.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_57.gif" alt="index_57.gif" width="151" height="44" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_58.gif" alt="index_58.gif" width="180" height="180" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_59.gif" alt="index_59.gif" width="462" height="39" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_60.gif" alt="index_60.gif" width="576" height="562" style="vertical-align:middle" />
+</p>
+
+<p class="Subsection">
+ Textures
+</p>
+
+
+
+<p class="Text">
+ Organic textures can be obtained by applying other rules to this pseudorandom grid.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_61.png" alt="index_61.png" width="637" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_62.gif" alt="index_62.gif" width="576" height="566" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_63.png" alt="index_63.png" width="637" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_64.gif" alt="index_64.gif" width="576" height="562" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_65.png" alt="index_65.png" width="637" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_66.gif" alt="index_66.gif" width="576" height="561" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_67.png" alt="index_67.png" width="644" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_68.gif" alt="index_68.gif" width="576" height="564" style="vertical-align:middle" />
+</p>
+
+<p class="Subsection">
+ Boring Rules
+</p>
+
+
+
+<p class="Text">
+ There is an <span style='font-weight: bold;'>identity</span> rule which leaves any grid unchanged: rule 240.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_69.png" alt="index_69.png" width="117" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_70.gif" alt="index_70.gif" width="512" height="155" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ And a <span style='font-weight: bold;'>negative</span> rule that swaps alive and dead states: rule 15.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_71.png" alt="index_71.png" width="110" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_72.gif" alt="index_72.gif" width="512" height="155" style="vertical-align:middle" />
+</p>
+
+<p class="Subsection">
+ Twins
+</p>
+
+
+
+<p class="Text">
+ A simple procedure can be followed to find the evil twin of a rule that has the same effect but in the <span style='font-weight: bold;'>negative</span> world. To find it, take the number in its binary form (with the leading zeros needed for the number to be 8 digits long), swap ones and zeros and read it backwards. Let us take rule 214 as an example.
 </p>
 
 
 
 <p class="Item">
- <span style='font-weight: bold;'>TANegativeGrid</span> returns the negative of a grid
+ First, find the binary form of the rule number:&nbsp;&nbsp;&nbsp;<span><span><img src="HTMLFiles/index_73.png" alt="index_73.png" width="110" height="19" style="vertical-align:middle" /></span></span>
 </p>
 
 
 
 <p class="Item">
- <span style='font-weight: bold;'>TANegativeRule</span> returns the number of the rule that will have the same effect but in the negative world
+ then swap ones and zeros:&nbsp;&nbsp;&nbsp;<span><span><img src="HTMLFiles/index_74.png" alt="index_74.png" width="74" height="19" style="vertical-align:middle" /></span></span>
+</p>
+
+
+
+<p class="Item">
+  and finally reverse it:&nbsp;&nbsp;&nbsp;<span><span><img src="HTMLFiles/index_75.png" alt="index_75.png" width="110" height="19" style="vertical-align:middle" /></span></span>
 </p>
 
 
 
 <p class="Text">
- You will thus obtain the same result by first evolving a grid and then computing its negative: 
+ Two functions help work in the negative world: <span style='font-weight: bold;color: #800080;'>TANegativeGrid</span> returns the negative of a grid and <span style='font-weight: bold;color: #800080;'>TANegativeRule</span> returns the number of the twin rule.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_26.png" alt="index_26.png" width="503" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_76.png" alt="index_76.png" width="148" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_27.gif" alt="index_27.gif" width="180" height="180" style="vertical-align:middle" />
-</p>
-
-<p class="Text">
- Or by first computing its negative, then evolving it with the negative rule:
-</p>
-
-
-
-<p class="Input">
- <img src="HTMLFiles/index_28.png" alt="index_28.png" width="144" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_29.png" alt="index_29.png" width="16" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_77.png" alt="index_77.png" width="23" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Input">
- <img src="HTMLFiles/index_30.png" alt="index_30.png" width="496" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_78.png" alt="index_78.png" width="532" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_31.gif" alt="index_31.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_79.gif" alt="index_79.gif" width="500" height="500" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_80.png" alt="index_80.png" width="653" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_81.gif" alt="index_81.gif" width="500" height="500" style="vertical-align:middle" />
 </p>
 
 <p class="Section">
- Conclusion
+ Final Thoughts
 </p>
 
 
 
 <p class="Text">
- I hope you will enjoy this package. Share what interesting things you find with it!
+ If you want to delve deeper into the mathematics behind this work, you can read the related paper: <span><a href="https://arxiv.org/abs/2309.15795"><span class="HyperlinkInline">https://arxiv.org/abs/2309.15795</span></a></span>
+</p>
+
+
+
+<p class="Text">
+ I hope you will enjoy this package. Share what beautiful or interesting things you find with it!
+</p>
+
+
+
+<p class="Section">
+ References
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>1</span>] C. Bays, &ldquo;Cellular Automata in the Triangular Tessellation,&rdquo; 1994.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>2</span>] L. Naumov, &ldquo;Generalized coordinates for cellular automata grids,&rdquo; in International Conference on Computational Science, Springer, 2003, pp. 869&ndash;878.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>3</span>] C. Bays, &ldquo;Cellular Automata in Triangular, Pentagonal and Hexagonal Tessellations,&rdquo; in Encyclopedia of Complexity and Systems Science, 2009, pp. 892&ndash;900.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>4</span>] Y. Lin, A. Mynett, and Q. Chen, &ldquo;Application of Unstructured Cellular Automata on Ecological Modelling,&rdquo; in Advances in Water Resources and Hydraulic Engineering, Berlin, Heidelberg: Springer Berlin Heidelberg, 2009, pp. 624&ndash;629. doi: 10.1007/978-3-540-89465-0_108.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>5</span>] C. Bays, &ldquo;The game of life in non-square environments,&rdquo; in Game of Life Cellular Automata, Springer, 2010, pp. 319&ndash;329.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>6</span>] B. Breckling, G. Pe&rsquo;er, and Y. G. Matsinos, &ldquo;Cellular automata in ecological modelling,&rdquo; in Modelling Complex Ecological Dynamics: An Introduction into Ecological Modelling for Students, Teachers &amp; Scientists, Springer, 2011, pp. 105&ndash;117.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>7</span>] M. Zawidzki, &ldquo;Application of Semitotalistic 2D Cellular Automata on a Triangulated 3D Surface,&rdquo; Int. J. DNE, vol. 6, no. 1, pp. 34&ndash;51, Jan. 2011, doi: 10.2495/DNE-V6-N1-34-51.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>8</span>] G. M. Ortigoza, A. Lorandi, and I. Neri, &ldquo;ACFUEGOS: An Unstructured Triangular Cellular Automata for Modelling Forest Fire Propagation,&rdquo; in High Performance Computer Applications, I. Gitler and J. Klapp, Eds., in Communications in Computer and Information Science, vol. 595. Cham: Springer International Publishing, 2016, pp. 132&ndash;143. doi: 10.1007/978-3-319-32243-8_9.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>9</span>] M. Saadat, &ldquo;Cellular Automata in the Triangular Grid,&rdquo; 2016.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>10</span>] S. Uguz, S. Redjepov, E. Acar, and H. Akin, &ldquo;Structure and reversibility of 2D von Neumann cellular automata over triangular lattice,&rdquo; International Journal of Bifurcation and Chaos, vol. 27, p. 1750083, 2017.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>11</span>] M. Saadat and B. Nagy, &ldquo;Cellular Automata Approach to Mathematical Morphology in the Triangular Grid,&rdquo; ACTA POLYTECH HUNG, vol. 15, no. 6, pp. 45&ndash;62, 2018, doi: 10.12700/APH.15.6.2018.6.3.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>12</span>] G. A. Wainer, &ldquo;An introduction to cellular automata models with cell-DEVS,&rdquo; in 2019 Winter Simulation Conference (WSC), IEEE, 2019, pp. 1534&ndash;1548.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>13</span>] A. V. Pavlova, S. E. Rubtsov, and I. S. Telyatnikov, &ldquo;Using cellular automata in modelling of the fire front propagation through rough terrain,&rdquo; IOP Conf. Ser.: Earth Environ. Sci., vol. 579, no. 1, p. 012104, Oct. 2020, doi: 10.1088/1755-1315/579/1/012104.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>14</span>] M. R. Saadat and B. Nagy, &ldquo;Generating Patterns on the Triangular Grid by Cellular Automata including Alternating Use of Two Rules,&rdquo; in 2021 12th International Symposium on Image and Signal Processing and Analysis (ISPA), Zagreb, Croatia: IEEE, Sep. 2021, pp. 253&ndash;258. doi: 10.1109/ISPA52656.2021.9552107.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>15</span>] M. R. Saadat and N. Benedek, &ldquo;Copy Machines - Self-reproduction with 2 States on Archimedean Tilings,&rdquo; 2023.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>16</span>] S. Wolfram and others, A New Kind Of Science, vol. 5. Wolfram media Champaign, IL, 2002.
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>17</span>] E. W. Weisstein, &ldquo;Elementary Cellular Automaton&rdquo;, [Online]. Available: <span><a href="https://mathworld.wolfram.com/ElementaryCellularAutomaton.html"><span class="HyperlinkInline">https://mathworld.wolfram.com/ElementaryCellularAutomaton.html</span></a></span>
+</p>
+
+
+
+<p class="Item">
+ [<span style='color: #800080;'>18</span>] P. Cousin and A. Maignan, &ldquo;Organic Structures Emerging From Bio-Inspired Graph-Rewriting Automata,&rdquo; in 2022 24th International Symposium on Symbolic and Numeric Algorithms for Scientific Computing (SYNASC), Hagenberg / Linz, Austria: IEEE, Sep. 2022, pp. 293&ndash;296. doi: 10.1109/SYNASC57785.2022.00053.
 </p>
 
 
