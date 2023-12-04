@@ -60,7 +60,7 @@ TAStartRandom::usage="TAStartRandom[n] is a grid with a random distribution of a
 TAEdit::usage="TAEdit[grid] allows you to edit the grid and copy the result.";
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Functions*)
 
 
@@ -503,14 +503,14 @@ SparseArray[({#,1}->1)&/@{2,3,5,6,8,11,13,16,17,19,21,22,23,27,29,31,33,34,35,41
 buildGrid[10][[3]]};
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Edit*)
 
 
 TAEdit[grid_]:=DynamicModule[{g=grid},
 Column[{
 ClickPane[
-Dynamic@Framed@TAGridPlot[g,"ImageSize"->Large],
+Dynamic@Framed@TAGridPlot[g,"ImageSize"->Medium, "Padding"->0],
 Module[{index=Nearest[g[[3,;;graphOrderFromLayer[layerFromMatrix@g[[1]]-2]]]->"Index",#][[1]]},
 g=ReplacePart[g,{2,index,1}->Mod[g[[2,index,1]]+1,2]]
 ]&],Button["copy",CopyToClipboard@Iconize[g,"grid"]]}]
