@@ -13,14 +13,14 @@
 (*https://orcid.org/0000-0002-3866-7615*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Begin*)
 
 
 BeginPackage["TriangularAutomata`"];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Evolution*)
 
 
@@ -31,7 +31,7 @@ TANegativeGrid::usage="TANegativeGrid[grid] returns the grid with all states inv
 TANegativeRule::usage="TANegativeRule[ruleNumber] returns the rule number that would have the same effect in a negative grid.";
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Plots*)
 
 
@@ -44,7 +44,7 @@ TAEvolutionPlot::usage="TAEvolutionPlot[grid,ruleNumber,numberOfSteps] generates
 TAEvolutionPlot3D::usage="TAEvolutionPlot[grid,ruleNumber,numberOfSteps] generate a 3D representation of the grid evolution.";
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Starting Points*)
 
 
@@ -53,11 +53,18 @@ TAStartLogo::usage="TAStartLogo is a grid with alive cells in the shape of the l
 TAStartRandom::usage="TAStartRandom[n] is a grid with a random distribution of alive and dead cells on n layers.";
 
 
-Begin["`Private`"];
+(* ::Subsection::Closed:: *)
+(*Edit*)
 
 
-(* ::Section:: *)
+TAEdit::usage="TAEdit[grid] allows you to edit the grid and copy the result.";
+
+
+(* ::Section::Closed:: *)
 (*Functions*)
+
+
+Begin["`Private`"];
 
 
 (* ::Subsection::Closed:: *)
@@ -68,11 +75,11 @@ Begin["`Private`"];
 aliveColor=RGBColor[0.5, 0, 0.5];deadColor=GrayLevel[1];unknownColor = GrayLevel[0.85];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Evolution*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Utilities*)
 
 
@@ -203,7 +210,7 @@ buildCoords[l_]:=Module[{i,coords={{0,0}}},
 Monitor[For[i=0,i<l,i++,coords=expandCoords@coords],i];Return@coords];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Computing the next grid*)
 
 
@@ -263,7 +270,7 @@ Return@grids
 ];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Plots*)
 
 
@@ -361,6 +368,9 @@ If[OptionValue["Time"]=!=Null,AppendTo[graphicsList,Text[Style[OptionValue["Time
 
 
 Return@Which[
+NumberQ@OptionValue["Padding"],
+	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
+PlotRangePadding->{OptionValue["Padding"],OptionValue["Padding"]},PlotRange->Norm@coords2D[[-1]],ImageSize->OptionValue["ImageSize"]],
 OptionValue["Padding"]===Automatic,
 	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
 PlotRangePadding->{4,4},PlotRange->Norm@coords2D[[-1]],ImageSize->OptionValue["ImageSize"]],
@@ -467,7 +477,7 @@ TAEvolutionPlot3D[grid_,ruleNumber_,steps_, OptionsPattern[]]:=Module[
 ]]];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Starting Points*)
 
 
@@ -480,16 +490,31 @@ buildGrid[n_] :=
 
 TAStartOneAlive ={SparseArray[Automatic, {4, 10}, 0, {1, {{0, 3, 5, 7, 9}, {{2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}}}, {1, 1, 1, 1, 1, 1, 1, 1, 1}}],SparseArray[Automatic, {10, 1}, 0, {1, {{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {{1}}}, {1}}],{{0, 0}, {3^Rational[-1, 2], 0}, {3^Rational[-1, 2] + Rational[-1, 2] 3^Rational[1, 2], Rational[1, 2]}, {3^Rational[-1, 2] + Rational[-1, 2] 3^Rational[1, 2], Rational[-1, 2]}, {Rational[1, 2] 3^Rational[1, 2], Rational[-1, 2]}, {Rational[1, 2] 3^Rational[1, 2], Rational[1, 2]}, {0, 1}, {Rational[-1, 2] 3^Rational[1, 2], Rational[1, 2]}, {Rational[-1, 2] 3^Rational[1, 2], Rational[-1, 2]}, {0, -1}}};
 
-TAStartRandom[n_] :=
+TAStartRandom[n_,d_:.5] :=
 	Module[{matrix = buildMatrix[n+2],coords=buildCoords[n+2]},
-		Return[{matrix, 
-		ArrayReshape[SparseArray@Transpose@{Table[RandomChoice[{0,1}],graphOrderFromLayer[n]]},{graphOrderFromLayer[n+2],1}],
+		Return[
+{matrix, 
+	ArrayReshape[SparseArray@Transpose@{Table[Round[RandomReal[{-.5,.5}]+d],graphOrderFromLayer[n]]},{graphOrderFromLayer[n+2],1}],
 			 coords }]
 	];
 
 TAStartLogo={buildGrid[10][[1]],
 SparseArray[({#,1}->1)&/@{2,3,5,6,8,11,13,16,17,19,21,22,23,27,29,31,33,34,35,41,44,49,58,67,78,88(*,45,112*)},{166,1}],
 buildGrid[10][[3]]};
+
+
+(* ::Subsection::Closed:: *)
+(*Edit*)
+
+
+TAEdit[grid_]:=DynamicModule[{g=grid},
+Column[{
+ClickPane[
+Dynamic@Framed@TAGridPlot[g,"ImageSize"->Large],
+Module[{index=Nearest[g[[3,;;graphOrderFromLayer[layerFromMatrix@g[[1]]-2]]]->"Index",#][[1]]},
+g=ReplacePart[g,{2,index,1}->Mod[g[[2,index,1]]+1,2]]
+]&],Button["copy",CopyToClipboard@g]}]
+];
 
 
 (* ::Section::Closed:: *)
