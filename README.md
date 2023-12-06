@@ -1,2 +1,2 @@
 # triangular-automata-mathematica
-A Mathematica package made to compute and display cellular automata in the infinite triangular grid.
+Informations here: http://paulcousin.github.io/triangular-automata-mathematica
