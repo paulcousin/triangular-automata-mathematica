@@ -13,7 +13,7 @@
 (*https://orcid.org/0000-0002-3866-7615*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Begin*)
 
 
@@ -60,7 +60,7 @@ TAStartRandom::usage="TAStartRandom[n] is a grid with a random distribution of a
 TAEdit::usage="TAEdit[grid] allows you to edit the grid and copy the result.";
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Functions*)
 
 
@@ -73,6 +73,7 @@ Begin["`Private`"];
 
 (* ::Input::Initialization:: *)
 aliveColor=RGBColor[0.5, 0, 0.5];deadColor=GrayLevel[1];unknownColor = GrayLevel[0.85];
+exactCoordinates= False;
 
 
 (* ::Subsection::Closed:: *)
@@ -138,7 +139,7 @@ output=PadRight[m,{maxDim,maxDim}];
 ];
 
 
-(* ::Subsubsubsection::Closed:: *)
+(* ::Subsubsubsection:: *)
 (*Expanding an existing Grid Matrix*)
 
 
@@ -206,7 +207,7 @@ expandCoords[c_] := Module[{coords = c, layer = layerFromCoords @ c +
 
 
 (* ::Input::Initialization:: *)
-buildCoords[l_]:=Module[{i,coords={{0,0}}},
+buildCoords[l_]:=Module[{i,coords=If[exactCoordinates,{{0,0}},{{0.,0.}}]},
 Monitor[For[i=0,i<l,i++,coords=expandCoords@coords],i];Return@coords];
 
 
@@ -318,25 +319,7 @@ If[OptionValue["Labeled"],
 Options[TAGridPlot]={"ImageSize" -> Small,"Time"->Null, "Padding"->Automatic};
 
 TAGridPlot[grid_,OptionsPattern[]]:=Module[
-{x,stateVector=grid[[2]],coords3D=grid[[3]] . Transpose[\!\(\*
-TagBox[
-RowBox[{"(", GridBox[{
-{
-FractionBox["2", 
-SqrtBox["3"]], "0"},
-{
-RowBox[{"-", 
-FractionBox["1", 
-SqrtBox["3"]]}], "1"},
-{
-RowBox[{"-", 
-FractionBox["1", 
-SqrtBox["3"]]}], 
-RowBox[{"-", "1"}]}
-},
-GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
-GridBoxSpacings->{"Columns" -> {Offset[0.27999999999999997`], {Offset[0.7]}, Offset[0.27999999999999997`]}, "Rows" -> {Offset[0.2], {Offset[0.4]}, Offset[0.2]}}], ")"}],
-Function[BoxForm`e$, MatrixForm[BoxForm`e$]]]\)],coords2D=grid[[3]],aliveVertices, deadVertices,triangle1, triangle2, triangles1={},triangles2={},gridstate=grid[[2]][[-1,-1]],color,graphicsList={}},
+{x,stateVector=grid[[2]],coords=grid[[3]],aliveVertices, deadVertices,triangle1, triangle2, triangles1={},triangles2={},gridstate=grid[[2]][[-1,-1]],color,graphicsList={}},
 
 triangle1=Triangle[{{-1/Sqrt[3],0},{1/(2Sqrt[3]),1/2},{1/(2Sqrt[3]),-1/2}}];
 triangle2=Triangle[{{1/Sqrt[3],0},{-1/(2Sqrt[3]),1/2},{-(1/(2Sqrt[3])),-1/2}}];
@@ -345,16 +328,16 @@ If[gridstate==0,
 color=aliveColor;
 aliveVertices=Drop[ArrayRules@stateVector,-1]/.({x_,1}->1)->x;
 	Scan[If[
-	AllTrue[coords3D[[#]],IntegerQ],
-	AppendTo[triangles1,coords2D[[#]]],
-	AppendTo[triangles2,coords2D[[#]]]]&,
+	EvenQ@layerFromOrder@#,
+	AppendTo[triangles1,coords[[#]]],
+	AppendTo[triangles2,coords[[#]]]]&,
 	aliveVertices];,
 color= deadColor;
 deadVertices=Drop[ArrayRules[ConstantArray[1,Dimensions@stateVector]-stateVector],-1]/.({x_,1}->1)->x;
 	Scan[If[
-	AllTrue[coords3D[[#]],IntegerQ],
-	AppendTo[triangles1,coords2D[[#]]],
-	AppendTo[triangles2,coords2D[[#]]]]&,
+	EvenQ@layerFromOrder@#,
+	AppendTo[triangles1,coords[[#]]],
+	AppendTo[triangles2,coords[[#]]]]&,
 	deadVertices];
 ];
 
@@ -370,10 +353,10 @@ If[OptionValue["Time"]=!=Null,AppendTo[graphicsList,Text[Style[OptionValue["Time
 Return@Which[
 NumberQ@OptionValue["Padding"],
 	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
-PlotRangePadding->{OptionValue["Padding"],OptionValue["Padding"]},PlotRange->Norm@coords2D[[-1]],ImageSize->OptionValue["ImageSize"]],
+PlotRangePadding->{OptionValue["Padding"],OptionValue["Padding"]},PlotRange->Norm@coords[[-1]],ImageSize->OptionValue["ImageSize"]],
 OptionValue["Padding"]===Automatic,
 	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
-PlotRangePadding->{4,4},PlotRange->Norm@coords2D[[-1]],ImageSize->OptionValue["ImageSize"]],
+PlotRangePadding->{4,4},PlotRange->Norm@coords[[-1]],ImageSize->OptionValue["ImageSize"]],
 OptionValue["Padding"]===None,
 Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],ImageSize->OptionValue["ImageSize"]]
 ];
@@ -402,25 +385,7 @@ AppendTo[grids,Last@grids];
 
 (* ::Input::Initialization:: *)
 TAGridPlot3D[grid_,time_]:=Module[
-{x,level=time,stateVector=grid[[2]],coords3D=grid[[3]] . Transpose[\!\(\*
-TagBox[
-RowBox[{"(", GridBox[{
-{
-FractionBox["2", 
-SqrtBox["3"]], "0"},
-{
-RowBox[{"-", 
-FractionBox["1", 
-SqrtBox["3"]]}], "1"},
-{
-RowBox[{"-", 
-FractionBox["1", 
-SqrtBox["3"]]}], 
-RowBox[{"-", "1"}]}
-},
-GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
-GridBoxSpacings->{"Columns" -> {Offset[0.27999999999999997`], {Offset[0.7]}, Offset[0.27999999999999997`]}, "Rows" -> {Offset[0.2], {Offset[0.4]}, Offset[0.2]}}], ")"}],
-Function[BoxForm`e$, MatrixForm[BoxForm`e$]]]\)],coords2D=grid[[3]],aliveVertices, deadVertices,shape1, shape2, shapes1={},shapes2={},shapes={},gridstate=grid[[2]][[-1,-1]],color},
+{x,level=time,stateVector=grid[[2]],coords=grid[[3]],aliveVertices, deadVertices,shape1, shape2, shapes1={},shapes2={},shapes={},gridstate=grid[[2]][[-1,-1]],color},
 
 
 shape1=MeshRegion[{{-1/Sqrt[3], 0, 0}, {1/(2Sqrt[3]), 1/2, 0}, {1/(2Sqrt[3]), -(1/2), 0}, {-1/Sqrt[3], 0, 1}, {1/(2Sqrt[3]),1/2, 1}, {1/(2Sqrt[3]), -(1/2), 1}}, {Polygon[{{1, 2, 3}, {4, 5, 6}}], Polygon[{{1, 2, 5, 4}, {2, 3, 6, 5}, {3, 1, 4, 6}}]}];
@@ -433,9 +398,9 @@ If[gridstate==0,
 color=aliveColor;
 aliveVertices=Drop[ArrayRules@stateVector,-1]/.({x_,1}->1)->x;
 Scan[If[
-AllTrue[coords3D[[#]],IntegerQ],
-AppendTo[shapes1,Append[coords2D[[#]],-level]],
-AppendTo[shapes2,Append[coords2D[[#]],-level]]]&,
+EvenQ@layerFromOrder@#,
+AppendTo[shapes1,Append[coords[[#]],-level]],
+AppendTo[shapes2,Append[coords[[#]],-level]]]&,
 aliveVertices];
 
 ,
@@ -443,9 +408,9 @@ aliveVertices];
 color= deadColor;
 deadVertices=Drop[ArrayRules[ConstantArray[1,Dimensions@stateVector]-stateVector],-1]/.({x_,1}->1)->x;
 Scan[If[
-AllTrue[coords3D[[#]],IntegerQ],
-AppendTo[shapes1,Append[coords2D[[#]],-level]],
-AppendTo[shapes2,Append[coords2D[[#]],-level]]]&,
+EvenQ@layerFromOrder@#,
+AppendTo[shapes1,Append[coords[[#]],-level]],
+AppendTo[shapes2,Append[coords[[#]],-level]]]&,
 deadVertices];
 
 ];
@@ -488,7 +453,11 @@ buildGrid[n_] :=
 			 1}], buildCoords[n]}]
 	]
 
-TAStartOneAlive ={SparseArray[Automatic, {4, 10}, 0, {1, {{0, 3, 5, 7, 9}, {{2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}}}, {1, 1, 1, 1, 1, 1, 1, 1, 1}}],SparseArray[Automatic, {10, 1}, 0, {1, {{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {{1}}}, {1}}],{{0, 0}, {3^Rational[-1, 2], 0}, {3^Rational[-1, 2] + Rational[-1, 2] 3^Rational[1, 2], Rational[1, 2]}, {3^Rational[-1, 2] + Rational[-1, 2] 3^Rational[1, 2], Rational[-1, 2]}, {Rational[1, 2] 3^Rational[1, 2], Rational[-1, 2]}, {Rational[1, 2] 3^Rational[1, 2], Rational[1, 2]}, {0, 1}, {Rational[-1, 2] 3^Rational[1, 2], Rational[1, 2]}, {Rational[-1, 2] 3^Rational[1, 2], Rational[-1, 2]}, {0, -1}}};
+TAStartOneAlive ={
+buildMatrix[2],
+SparseArray[Automatic, {10, 1}, 0, {1, {{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {{1}}}, {1}}],
+buildCoords[2]
+};
 
 TAStartRandom[n_,d_:.5] :=
 	Module[{matrix = buildMatrix[n+2],coords=buildCoords[n+2]},
@@ -498,9 +467,9 @@ TAStartRandom[n_,d_:.5] :=
 			 coords }]
 	];
 
-TAStartLogo={buildGrid[10][[1]],
+TAStartLogo={buildMatrix[10],
 SparseArray[({#,1}->1)&/@{2,3,5,6,8,11,13,16,17,19,21,22,23,27,29,31,33,34,35,41,44,49,58,67,78,88(*,45,112*)},{166,1}],
-buildGrid[10][[3]]};
+buildCoords[10]};
 
 
 (* ::Subsection::Closed:: *)
