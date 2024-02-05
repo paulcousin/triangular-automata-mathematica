@@ -108,7 +108,7 @@ grid[[3]]};
 TANegativeRule[ruleNumber_]:=FromDigits[1-Reverse@IntegerDigits[ruleNumber,2,8],2];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Grid Matrix and Adjacency Matrix*)
 
 
@@ -139,7 +139,7 @@ output=PadRight[m,{maxDim,maxDim}];
 ];
 
 
-(* ::Subsubsubsection:: *)
+(* ::Subsubsubsection::Closed:: *)
 (*Expanding an existing Grid Matrix*)
 
 
@@ -164,45 +164,45 @@ buildMatrix[l_]:=Nest[expandMatrix,SparseArray[Automatic, {1, 1}, 0, {1, {{0, 0}
 
 
 (* ::Input::Initialization:: *)
-expandCoords[c_] := Module[{coords = c, layer = layerFromCoords @ c +
-	 1, i},
-	AppendTo[
-		coords
-		,
-		coords[[Min[-3 * (layer - 1), -1]]] + If[OddQ[layer],
-			{1 / Sqrt[3], 0}
-			,
+expandCoords[c_] := Module[
+{i,coords = c, layer = layerFromCoords @ c +1, new,floor, ceiling},
+
+floor=Floor[layer / 2];
+ceiling =Ceiling[layer / 2];
+
+new={coords[[Min[-3 * (layer - 1), -1]]] + If[OddQ[layer],
+			{1 / Sqrt[3], 0},
 			{1 / (2 Sqrt[3]), -(1/2)}
-		]
-	];
+		]};
+
 	Table[
 		AppendTo[
-			coords
+			new
 			,
-			Last[coords] + Which[
-				i < Floor[layer / 2],
+			Last[new] + Which[
+				i < floor,
 					{0, 1}
 				,
-				i < Floor[layer / 2] + Ceiling[layer / 2],
+				i < floor + ceiling,
 					{-(Sqrt[3] / 2), 1/2}
 				,
-				i < 2 Floor[layer / 2] + Ceiling[layer / 2],
+				i < 2 floor + ceiling,
 					{-(Sqrt[3] / 2), -(1/2)}
 				,
-				i < 2 Floor[layer / 2] + 2 Ceiling[layer / 2],
+				i < 2 floor + 2 ceiling,
 					{0, -1}
 				,
-				i < 3 Floor[layer / 2] + 2 Ceiling[layer / 2],
+				i < 3 floor + 2 ceiling,
 					{Sqrt[3] / 2, -(1/2)}
 				,
-				i < 3 Floor[layer / 2] + 3 Ceiling[layer / 2],
+				i < 3 floor + 3 ceiling,
 					{Sqrt[3] / 2, 1/2}
 			]
 		]
 		,
 		{i, 0, 3 * layer - 2}
 	];
-	Return @ coords;
+	Return @Join[coords,new];
 ]
 
 
@@ -261,12 +261,12 @@ Return@{matrix,stateVector, vertexCoords}
 
 
 TANestEvolve[gr_,rN_,n_]:=Module[{i,grid=gr},
-Monitor[For[i=0,i<n,i++,grid=TAEvolve[grid,rN]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i]<>" of "<>ToString[n]}}];
+Monitor[For[i=0,i<n,i++,grid=TAEvolve[grid,rN]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i+1]<>" of "<>ToString[n]}}];
 Return@grid
 ];
 
 TANestListEvolve[gr_,rN_,n_]:=Module[{i,grids={gr}},
-Monitor[For[i=0,i<n,i++,AppendTo[grids,TAEvolve[Last@grids,rN]]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i]<>" of "<>ToString[n]}}];
+Monitor[For[i=0,i<n,i++,AppendTo[grids,TAEvolve[Last@grids,rN]]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i+1]<>" of "<>ToString[n]}}];
 Return@grids
 ];
 
