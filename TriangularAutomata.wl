@@ -271,7 +271,7 @@ Return@grids
 ];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Plots*)
 
 
@@ -326,14 +326,14 @@ triangle2=Triangle[{{1/Sqrt[3],0},{-1/(2Sqrt[3]),1/2},{-(1/(2Sqrt[3])),-1/2}}];
 
 If[gridstate==0,
 color=aliveColor;
-aliveVertices=Drop[ArrayRules@stateVector,-1]/.({x_,1}->1)->x;
+aliveVertices=Drop[ArrayRules@stateVector,-1][[;;,1,1]];
 	Scan[If[
 	EvenQ@layerFromOrder@#,
 	AppendTo[triangles1,coords[[#]]],
 	AppendTo[triangles2,coords[[#]]]]&,
 	aliveVertices];,
 color= deadColor;
-deadVertices=Drop[ArrayRules[ConstantArray[1,Dimensions@stateVector]-stateVector],-1]/.({x_,1}->1)->x;
+deadVertices=Drop[ArrayRules[ConstantArray[1,Dimensions@stateVector]-stateVector],-1][[;;,1,1]];
 	Scan[If[
 	EvenQ@layerFromOrder@#,
 	AppendTo[triangles1,coords[[#]]],
@@ -396,7 +396,7 @@ shape2=MeshRegion[{{1/Sqrt[3], 0, 0}, {-(1/(2Sqrt[3])), 1/2, 0}, {-(1/(2Sqrt[3])
 If[gridstate==0,
 
 color=aliveColor;
-aliveVertices=Drop[ArrayRules@stateVector,-1]/.({x_,1}->1)->x;
+aliveVertices=Drop[ArrayRules@stateVector,-1][[;;,1,1]];
 Scan[If[
 EvenQ@layerFromOrder@#,
 AppendTo[shapes1,Append[coords[[#]],-level]],
@@ -406,7 +406,7 @@ aliveVertices];
 ,
 
 color= deadColor;
-deadVertices=Drop[ArrayRules[ConstantArray[1,Dimensions@stateVector]-stateVector],-1]/.({x_,1}->1)->x;
+deadVertices=Drop[ArrayRules[ConstantArray[1,Dimensions@stateVector]-stateVector],-1][[;;,1,1]];
 Scan[If[
 EvenQ@layerFromOrder@#,
 AppendTo[shapes1,Append[coords[[#]],-level]],
