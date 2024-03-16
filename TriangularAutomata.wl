@@ -67,7 +67,7 @@ TAEdit::usage="TAEdit[grid] allows you to edit the grid and copy the result.";
 Begin["`Private`"];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Parameters*)
 
 
@@ -76,11 +76,11 @@ aliveColor=RGBColor[0.5, 0, 0.5];deadColor=GrayLevel[1];unknownColor = GrayLevel
 exactCoordinates= False;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Evolution*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Utilities*)
 
 
@@ -108,7 +108,7 @@ grid[[3]]};
 TANegativeRule[ruleNumber_]:=FromDigits[1-Reverse@IntegerDigits[ruleNumber,2,8],2];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Grid Matrix and Adjacency Matrix*)
 
 
@@ -271,7 +271,7 @@ Return@grids
 ];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Plots*)
 
 
