@@ -67,7 +67,7 @@ TAEdit::usage="TAEdit[grid] allows you to edit the grid and copy the result.";
 Begin["`Private`"];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Parameters*)
 
 
@@ -76,11 +76,11 @@ aliveColor=RGBColor[0.5, 0, 0.5];deadColor=GrayLevel[1];unknownColor = GrayLevel
 exactCoordinates= False;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Evolution*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Utilities*)
 
 
@@ -316,52 +316,57 @@ If[OptionValue["Labeled"],
 
 
 (* ::Input::Initialization:: *)
-Options[TAGridPlot]={"ImageSize" -> Small,"Time"->Null, "Padding"->Automatic};
+Options[TAGridPlot]={"ImageSize" -> Small,"Time"->Null, "Padding"->Automatic, "Parallel"->False};
 
 TAGridPlot[grid_,OptionsPattern[]]:=Module[
-{x,stateVector=grid[[2]],coords=grid[[3]],aliveVertices, deadVertices,triangle1, triangle2, triangles1={},triangles2={},gridstate=grid[[2]][[-1,-1]],color,graphicsList={}},
+{x,stateVector=grid[[2]],coords=grid[[3]],displayedVertices,triangleEven, triangleOdd, trianglesEven={},trianglesOdd={},gridstate=grid[[2]][[-1,-1]],color,graphicsList={},evenLayered,oddLayered},
 
-triangle1=Triangle[{{-1/Sqrt[3],0},{1/(2Sqrt[3]),1/2},{1/(2Sqrt[3]),-1/2}}];
-triangle2=Triangle[{{1/Sqrt[3],0},{-1/(2Sqrt[3]),1/2},{-(1/(2Sqrt[3])),-1/2}}];
+(*basic shapes*)
+triangleEven=Triangle[{{-1/Sqrt[3],0},{1/(2Sqrt[3]),1/2},{1/(2Sqrt[3]),-1/2}}];
+triangleOdd=Triangle[{{1/Sqrt[3],0},{-1/(2Sqrt[3]),1/2},{-(1/(2Sqrt[3])),-1/2}}];
 
+(*select background color*)
 If[gridstate==0,
 color=aliveColor;
-aliveVertices=Drop[ArrayRules@stateVector,-1][[;;,1,1]];
-	Scan[If[
-	EvenQ@layerFromOrder@#,
-	AppendTo[triangles1,coords[[#]]],
-	AppendTo[triangles2,coords[[#]]]]&,
-	aliveVertices];,
+displayedVertices=Drop[ArrayRules@stateVector,-1][[;;,1,1]];
+,
 color= deadColor;
-deadVertices=Drop[ArrayRules[ConstantArray[1,Dimensions@stateVector]-stateVector],-1][[;;,1,1]];
-	Scan[If[
-	EvenQ@layerFromOrder@#,
-	AppendTo[triangles1,coords[[#]]],
-	AppendTo[triangles2,coords[[#]]]]&,
-	deadVertices];
+displayedVertices=Drop[ArrayRules[ConstantArray[1,Dimensions@stateVector]-stateVector],-1][[;;,1,1]];
 ];
 
-triangles1=triangles1/.{x_}->{x,x,x};
-triangles2=triangles2/.{x_}->{x,x,x};
+(*compute two sets of coordinates for even and odd layers*)
+evenLayered=Map[EvenQ@layerFromOrder@#&,displayedVertices];
+oddLayered=Not/@evenLayered;
 
+evenLayered = SparseArray[#->True&/@Pick[displayedVertices,evenLayered],Length@coords,False];
+oddLayered= SparseArray[#->True&/@Pick[displayedVertices,oddLayered],Length@coords,False];
+
+trianglesEven=Pick[coords,evenLayered]/.{x_}->{x,x,x};
+trianglesOdd=Pick[coords,oddLayered]/.{x_}->{x,x,x};
+
+(*construct Graphics object*)
 AppendTo[graphicsList,color];
-If[triangles1!={},AppendTo[graphicsList,Translate[triangle1,triangles1]]];
-If[triangles2!={},AppendTo[graphicsList,Translate[triangle2,triangles2]]];
+If[trianglesEven!={},AppendTo[graphicsList,Translate[triangleEven,trianglesEven]]];
+If[trianglesOdd!={},AppendTo[graphicsList,Translate[triangleOdd,trianglesOdd]]];
 If[OptionValue["Time"]=!=Null,AppendTo[graphicsList,Text[Style[OptionValue["Time"],FontSize->Scaled@.06],Scaled[{.98,.01}],{Right,Bottom}]]];
 
-
+(*output with different Padding options*)
 Return@Which[
+
 NumberQ@OptionValue["Padding"],
 	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
 PlotRangePadding->{OptionValue["Padding"],OptionValue["Padding"]},PlotRange->Norm@coords[[-1]],ImageSize->OptionValue["ImageSize"]],
+
 OptionValue["Padding"]===Automatic,
 	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
 PlotRangePadding->{4,4},PlotRange->Norm@coords[[-1]],ImageSize->OptionValue["ImageSize"]],
+
 OptionValue["Padding"]===None,
 Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],ImageSize->OptionValue["ImageSize"]]
+
 ];
 
-]
+];
 
 
 Options[TAEvolutionPlot]={"ImageSize" -> Medium, "Timed"->True, "Pause"->True, "Animated"->True};
@@ -384,40 +389,37 @@ AppendTo[grids,Last@grids];
 
 
 (* ::Input::Initialization:: *)
-TAGridPlot3D[grid_,time_]:=Module[
-{x,level=time,stateVector=grid[[2]],coords=grid[[3]],aliveVertices, deadVertices,shape1, shape2, shapes1={},shapes2={},shapes={},gridstate=grid[[2]][[-1,-1]],color},
+TAGridPlot3D[grid_,time_]:=Module[{x,level=time,stateVector=grid[[2]],coords=grid[[3]],displayedVertices,shapeEven,shapeOdd,shapesEven={},shapesOdd={},shapes={},evenLayered,oddLayered,gridstate=grid[[2]][[-1,-1]],color},
+
+(*basic shapes*)
+shapeEven=MeshRegion[{{-1/Sqrt[3],0,0},{1/(2Sqrt[3]),1/2,0},{1/(2Sqrt[3]),-(1/2),0},{-1/Sqrt[3],0,1},{1/(2Sqrt[3]),1/2,1},{1/(2Sqrt[3]),-(1/2),1}},{Polygon[{{1,2,3},{4,5,6}}],Polygon[{{1,2,5,4},{2,3,6,5},{3,1,4,6}}]}];
+shapeOdd=MeshRegion[{{1/Sqrt[3],0,0},{-(1/(2Sqrt[3])),1/2,0},{-(1/(2Sqrt[3])),-(1/2),0},{1/Sqrt[3],0,1},{-(1/(2Sqrt[3])),1/2,1},{-(1/(2Sqrt[3])),-(1/2),1}},{Polygon[{{1,2,3},{4,5,6}}],Polygon[{{1,2,5,4},{2,3,6,5},{3,1,4,6}}]}];
 
 
-shape1=MeshRegion[{{-1/Sqrt[3], 0, 0}, {1/(2Sqrt[3]), 1/2, 0}, {1/(2Sqrt[3]), -(1/2), 0}, {-1/Sqrt[3], 0, 1}, {1/(2Sqrt[3]),1/2, 1}, {1/(2Sqrt[3]), -(1/2), 1}}, {Polygon[{{1, 2, 3}, {4, 5, 6}}], Polygon[{{1, 2, 5, 4}, {2, 3, 6, 5}, {3, 1, 4, 6}}]}];
-
-shape2=MeshRegion[{{1/Sqrt[3], 0, 0}, {-(1/(2Sqrt[3])), 1/2, 0}, {-(1/(2Sqrt[3])), -(1/2), 0}, {1/Sqrt[3], 0, 1}, {-(1/(2Sqrt[3])),1/2, 1}, {-(1/(2Sqrt[3])), -(1/2), 1}}, {Polygon[{{1, 2, 3}, {4, 5, 6}}], Polygon[{{1, 2, 5, 4}, {2, 3, 6, 5}, {3, 1, 4, 6}}]}];
-
-
+(*select background color*)
 If[gridstate==0,
-
 color=aliveColor;
-aliveVertices=Drop[ArrayRules@stateVector,-1][[;;,1,1]];
-Scan[If[
-EvenQ@layerFromOrder@#,
-AppendTo[shapes1,Append[coords[[#]],-level]],
-AppendTo[shapes2,Append[coords[[#]],-level]]]&,
-aliveVertices];
-
+displayedVertices=Drop[ArrayRules@stateVector,-1][[;;,1,1]];
 ,
-
 color= deadColor;
-deadVertices=Drop[ArrayRules[ConstantArray[1,Dimensions@stateVector]-stateVector],-1][[;;,1,1]];
-Scan[If[
-EvenQ@layerFromOrder@#,
-AppendTo[shapes1,Append[coords[[#]],-level]],
-AppendTo[shapes2,Append[coords[[#]],-level]]]&,
-deadVertices];
-
+displayedVertices=Drop[ArrayRules[ConstantArray[1,Dimensions@stateVector]-stateVector],-1][[;;,1,1]];
 ];
 
-Return@If[Union[shapes1,shapes2]=={},
-EmptyRegion[3],
-RegionUnion[Map[Translate[shape1,#]&,shapes1]\[Union]Map[Translate[shape2,#]&,shapes2]]
+(*compute two sets of coordinates for even and odd layers*)
+evenLayered=Map[EvenQ@layerFromOrder@#&,displayedVertices];
+oddLayered=Not/@evenLayered;
+
+evenLayered = SparseArray[#->True&/@Pick[displayedVertices,evenLayered],Length@coords,False];
+oddLayered= SparseArray[#->True&/@Pick[displayedVertices,oddLayered],Length@coords,False];
+
+shapesEven=Pick[coords,evenLayered];
+shapesOdd=Pick[coords,oddLayered];
+
+shapesEven=Transpose@Append[Transpose[shapesEven],ConstantArray[-level,Length@shapesEven]];
+shapesOdd=Transpose@Append[Transpose[shapesOdd],ConstantArray[-level,Length@shapesOdd]];
+
+(*output*)
+Return@If[Union[shapesEven,shapesOdd]=={},EmptyRegion[3],RegionUnion[Map[Translate[shapeEven,#]&,shapesEven]\[Union]Map[Translate[shapeOdd,#]&,shapesOdd]]
 ]
 ];
 
