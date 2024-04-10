@@ -13,7 +13,7 @@
 (*https://orcid.org/0000-0002-3866-7615*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Begin*)
 
 
@@ -54,13 +54,14 @@ TAStartRandom::usage="TAStartRandom[n] is a grid with a random distribution of a
 
 
 (* ::Subsection::Closed:: *)
-(*Edit*)
+(*Miscellaneous *)
 
 
 TAEdit::usage="TAEdit[grid] allows you to edit the grid and copy the result.";
+TACenterColumn::usage="TACenterColumn[grid,ruleNumber,n] gives the central column of the grid evolved n times.";
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Functions*)
 
 
@@ -108,7 +109,7 @@ grid[[3]]};
 TANegativeRule[ruleNumber_]:=FromDigits[1-Reverse@IntegerDigits[ruleNumber,2,8],2];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Grid Matrix and Adjacency Matrix*)
 
 
@@ -211,7 +212,7 @@ buildCoords[l_]:=Module[{i,coords=If[exactCoordinates,{{0,0}},{{0.,0.}}]},
 Monitor[For[i=0,i<l,i++,coords=expandCoords@coords],i];Return@coords];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Computing the next grid*)
 
 
@@ -228,16 +229,17 @@ newState[{aM_,sV_},ruleNumber_]:= SparseArray[Map[ruleState[ruleNumber,#]&,confi
 
 
 (* ::Input::Initialization:: *)
-TAEvolve[grid_,rN_]:=Module[
-{layer,
-matrix=grid[[1]],
-stateVector=grid[[2]],
-vertexCoords=grid[[3]],
-digits=IntegerDigits[rN,2,8],
-lastSpecified},
+Options[TAEvolve]={"Shrink"->False};
 
+TAEvolve[grid_,rN_,OptionsPattern[]]:=Module[
+{layer,matrix,stateVector,vertexCoords,coordsQ,digits,lastSpecified},
 
-layer=layerFromCoords@vertexCoords;
+digits=IntegerDigits[rN,2,8];
+coordsQ=Dimensions[grid][[1]]==3;
+matrix=grid[[1]];
+stateVector=grid[[2]];
+vertexCoords=grid[[-1]];
+layer=layerFromMatrix@matrix;
 
 lastSpecified=If[#=={},0,layerFromOrder@Last[#]]&@
 If[stateVector[[-1,-1]]==0,
@@ -245,29 +247,38 @@ Position[Normal@stateVector,1][[All,1]],
 Position[Normal@stateVector,0][[All,1]]
 ];
 
-If[lastSpecified==layer-2,
+
+If[(lastSpecified==layer-2 )\[And] !OptionValue["Shrink"],
 	matrix=expandMatrix@matrix;
-	vertexCoords=expandCoords@vertexCoords;
-	stateVector=ArrayReshape[stateVector,{Dimensions[vertexCoords][[1]],1},Normal@stateVector[[-1]]];
+	stateVector=ArrayReshape[stateVector,{Dimensions[matrix][[2]],1},stateVector[[-1,1]]];
+	If[coordsQ,vertexCoords=expandCoords@vertexCoords];
 	layer=(layer+1);
+];
+
+If[ OptionValue["Shrink"],
+	layer=(layer-1);
+matrix=matrix[[All,;;graphOrderFromLayer[layer]]];
+matrix=matrix[[;;ArrayRules[matrix][[-2,1,1]],All]];
+	stateVector=stateVector[[;;Dimensions[matrix][[2]],All]];stateVector=ReplacePart[stateVector,Table[{n,1}->Normal@stateVector[[-1-3layer,1]],{n,-3layer,-1}]];
+	If[ coordsQ,vertexCoords=vertexCoords[[;;Dimensions[matrix][[2]],All]]];
 ];
 
 stateVector=newState[{symmetrize[matrix],stateVector},rN];
 
 stateVector=ReplacePart[stateVector,Table[{n,1}->Normal@stateVector[[-1-3layer,1]],{n,-3layer,-1}]];
 
-Return@{matrix,stateVector, vertexCoords}
+Return@If[ coordsQ,Append[vertexCoords],Identity]@{matrix,stateVector}
 ];
 
 
 TANestEvolve[gr_,rN_,n_]:=Module[{i,grid=gr},
 Monitor[For[i=0,i<n,i++,grid=TAEvolve[grid,rN]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i+1]<>" of "<>ToString[n]}}];
-Return@grid
+Return@grid;
 ];
 
 TANestListEvolve[gr_,rN_,n_]:=Module[{i,grids={gr}},
 Monitor[For[i=0,i<n,i++,AppendTo[grids,TAEvolve[Last@grids,rN]]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i+1]<>" of "<>ToString[n]}}];
-Return@grids
+Return@grids;
 ];
 
 
@@ -475,7 +486,7 @@ buildCoords[10]};
 
 
 (* ::Subsection::Closed:: *)
-(*Edit*)
+(*Miscellaneous *)
 
 
 TAEdit[grid_]:=DynamicModule[{g=grid},
@@ -486,6 +497,17 @@ Module[{index=Nearest[g[[3,;;graphOrderFromLayer[layerFromMatrix@g[[1]]-2]]]->"I
 g=ReplacePart[g,{2,index,1}->Mod[g[[2,index,1]]+1,2]]
 ]&],Button["copy",CopyToClipboard@Iconize[g,"grid"]]}]
 ];
+
+
+TACenterColumn[gr_,rN_,n_]:=Module[{i,grid=gr[[;;2]],rule=rN,nsteps=n,values={},shrinkQ=False},
+Monitor[
+	For[i=0,i<=nsteps,i++,
+	AppendTo[values, grid[[2,1,1]]];
+	If[layerFromMatrix[grid[[1]]]>1+nsteps-i,shrinkQ=True];
+	grid=TAEvolve[grid,rule,"Shrink"->shrinkQ];
+	],
+Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i+1]<>" of "<>ToString[n]}}];
+Return@values;]
 
 
 (* ::Section::Closed:: *)
