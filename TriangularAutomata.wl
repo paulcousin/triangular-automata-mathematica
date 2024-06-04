@@ -21,6 +21,15 @@ BeginPackage["TriangularAutomata`"];
 
 
 (* ::Subsection:: *)
+(*Utilities*)
+
+
+TAConfigurationVector::usage="TAConfigurationVector[grid] returns the configuration vector of the grid.";
+TANegativeGrid::usage="TANegativeGrid[grid] returns the grid with all states inverted";
+TANegativeRule::usage="TANegativeRule[ruleNumber] returns the rule number that would have the same effect in a negative grid.";
+
+
+(* ::Subsection:: *)
 (*Grid*)
 
 
@@ -30,18 +39,16 @@ TAAdjacencyMatrix::usage="TAAdjacencyMatrix[l] gives the adjacency matrix of the
 TACoordinates::usage="TACoordinates[l] gives the coordinate vector of the l layers wide grid.";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Evolution*)
 
 
 TAEvolve::usage="TAEvolve[grid,ruleNumber] evolves the grid with the given rule.";
 TANestEvolve::usage="TANestEvolve[grid,ruleNumber,n] evolves the grid n times with the given rule and returns the final grid.";
 TANestListEvolve::usage="TANestListEvolve[grid,ruleNumber,n] evolves the grid n times with the given rule and returns the list of all intermediate grids.";
-TANegativeGrid::usage="TANegativeGrid[grid] returns the grid with all states inverted";
-TANegativeRule::usage="TANegativeRule[ruleNumber] returns the rule number that would have the same effect in a negative grid.";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Plots*)
 
 
@@ -54,7 +61,7 @@ TAEvolutionPlot::usage="TAEvolutionPlot[grid,ruleNumber,numberOfSteps] generates
 TAEvolutionPlot3D::usage="TAEvolutionPlot[grid,ruleNumber,numberOfSteps] generate a 3D representation of the grid evolution.";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Starting Points*)
 
 
@@ -63,7 +70,7 @@ TAStartLogo::usage="TAStartLogo is a grid with alive cells in the shape of the l
 TAStartRandom::usage="TAStartRandom[n] is a grid with a random distribution of alive and dead cells on n layers.";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Miscellaneous *)
 
 
@@ -79,40 +86,82 @@ TAThreeCenterColumns::usage="TAThirdCenterColumn[grid,ruleNumber,n] gives the se
 Begin["`Private`"];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Parameters*)
 
 
 (* ::Input::Initialization:: *)
 aliveColor=RGBColor[0.5, 0, 0.5];deadColor=GrayLevel[1];unknownColor = GrayLevel[0.85];
 exactCoordinates= False;
+onlineDirectory="https://files.paulcousin.net/triangular-automata";
+
+
+(* ::Subsection:: *)
+(*Utilities*)
+
+
+(* ::Input::Initialization:: *)
+binary[n_]:=\!\(
+\*UnderoverscriptBox[\(\[Sum]\), \(i = 0\), \(23\)]\(\(IntegerDigits[n, 10, 24]\)[\([\(-1\) - i]\)]*
+\*SuperscriptBox[\(2\), \(i\)]\)\);
+
+
+layerFromOrder[order_]:=Ceiling[1/6 (-3+Sqrt[3(8 order-5)])];
+
+layerFromMatrix[matrix_] := Module[{order = Max @ Dimensions @ matrix, n, t},
+ Return@layerFromOrder[order]];
+
+layerFromCoords[coords_] := Module[{order = Length @ coords, n, t},
+Return@layerFromOrder[order]];
+	
+orderFromLayer[layer_]:=1+3 (layer(layer+1))/2;
+
+TALayer[TAGrid[sV_]]:=layerFromOrder@Length@sV;
+
+
+(* ::Input::Initialization:: *)
+TAConfigurationVector[TAGrid[sV_]]:=Normal[4*sV+TAAdjacencyMatrix[layerFromOrder@Length@sV] . sV][[All,1]];
+
+
+TANegativeGrid[grid_]:={grid[[1]],
+SparseArray@Normal@(1-grid[[2]]),
+grid[[3]]};
+
+TANegativeRule[ruleNumber_]:=FromDigits[1-Reverse@IntegerDigits[ruleNumber,2,8],2];
 
 
 (* ::Subsection:: *)
 (*Grid*)
 
 
-TAGrid/:MakeBoxes[TAGrid[a_],StandardForm]:=TemplateBox[
-{
-TAGrid[a],
-If[layerFromOrder[Length[a]]<=64+2,
-ToBoxes@Deploy@TAGridPlot[TAGrid[a],"Padding"->None,"ImageSize"->Tiny],
-FrameBox[GraphicsBox[{GrayLevel[0.9],GeometricTransformationBox[TagBox[PolygonBox[NCache[{{-(1/Sqrt[3]),0},{1/(2 Sqrt[3]),1/2},{1/(2 Sqrt[3]),-(1/2)}},{{-0.5773502691896258`,0},{0.2886751345948129`,0.5`},{0.2886751345948129`,-0.5`}}]],"Triangle"],{{{0.8660254037844388`,-0.5`}},{{0.8660254037844388`,0.5`}},{{-0.8660254037844384`,0.5`}},{{1.7320508075688774`,0.`}},{{1.7320508075688774`,1.`}},{{0.8660254037844388`,1.5`}},{{-1.732050807568877`,0.`}},{{-0.8660254037844384`,-1.5`}},{{0.8660254037844388`,-1.5`}},{{2.5980762113533165`,0.5`}},{{-2.598076211353315`,-0.5`}},{{3.4641016151377553`,0.`}}}],GeometricTransformationBox[TagBox[PolygonBox[NCache[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}},{{0.5773502691896258`,0},{-0.2886751345948129`,0.5`},{-0.2886751345948129`,-0.5`}}]],"Triangle"],{{{0.5773502691896258`,0.`}},{{-0.28867513459481275`,0.5`}},{{1.4433756729740645`,-0.5`}},{{0.577350269189626`,1.`}},{{-1.1547005383792512`,0.`}},{{-1.1547005383792512`,-1.`}},{{0.577350269189626`,-1.`}},{{2.3094010767585034`,0.`}},{{2.3094010767585034`,1.`}},{{1.4433756729740648`,1.5`}},{{-2.02072594216369`,-0.5`}},{{-0.28867513459481264`,-2.5`}},{{3.175426480542942`,0.5`}},{{-2.8867513459481273`,-1.`}}}]},Background->GrayLevel[0, 0],ImageSize->50],FrameStyle->GrayLevel[0.6],RoundingRadius->10,StripOnInput->False]
-]
-},
-"TAGrid",
-DisplayFunction:>(#2&),
-InterpretationFunction:>(#1&)]
+ TAGrid/:MakeBoxes[TAGrid[sV_],form_]:=With[
+ {
+ interpretation=Interpretation[
+ If[layerFromOrder[Length[sV]]-2<=64,
+ Deploy@TAGridPlot[TAGrid[sV],"ImageSize"->Tiny],
+ Deploy@largeGridRepresentation[layerFromOrder[Length[sV]]-2,Total[Abs[sV[[-1,-1]]-sV][[All,1]]],If[sV[[-1,-1]]==0,White,Purple]]
+ ],TAGrid[sV]]
+ },
+ MakeBoxes[interpretation,form]];
 
 
-(* ::Subsubsection::Closed:: *)
+largeGridRepresentation[layers_,population_,universe_]:=Panel[Grid[{{
+Spacer[0],Graphics[{GrayLevel[0.8], GeometricTransformation[Triangle[{{-3^Rational[-1, 2], 0}, {Rational[1, 2] 3^Rational[-1, 2], Rational[1, 2]}, {Rational[1, 2] 3^Rational[-1, 2], Rational[-1, 2]}}], {{{0.8660254037844388, -0.5}}, {{0.8660254037844388, 0.5}}, {{-0.8660254037844384, 0.5}}, {{1.7320508075688774`, 0.}}, {{1.7320508075688774`, 1.}}, {{0.8660254037844388, 1.5}}, {{-1.732050807568877, 0.}}, {{-0.8660254037844384, -1.5}}, {{0.8660254037844388, -1.5}}, {{2.5980762113533165`, 0.5}}, {{-2.598076211353315, -0.5}}, {{3.4641016151377553`, 0.}}}], GeometricTransformation[Triangle[{{3^Rational[-1, 2], 0}, {Rational[-1, 2] 3^Rational[-1, 2], Rational[1, 2]}, {Rational[-1, 2] 3^Rational[-1, 2], Rational[-1, 2]}}], {{{0.5773502691896258, 0.}}, {{-0.28867513459481275`, 0.5}}, {{1.4433756729740645`, -0.5}}, {{0.577350269189626, 1.}}, {{-1.1547005383792512`, 0.}}, {{-1.1547005383792512`, -1.}}, {{0.577350269189626, -1.}}, {{2.3094010767585034`, 0.}}, {{2.3094010767585034`, 1.}}, {{1.4433756729740648`, 1.5}}, {{-2.02072594216369, -0.5}}, {{-0.28867513459481264`, -2.5}}, {{3.175426480542942, 0.5}}, {{-2.8867513459481273`, -1.}}}]}, Background -> GrayLevel[0, 0], ImageSize -> 50],Spacer[0],
+Grid[{{Text[Style["layers:",Gray,Medium]],Text[Style[ToString@layers,Medium]]},
+{Text[Style["population:",Gray,Medium]],Text[Style[ToString@population,Medium]]},
+{Text[Style["universe:",Gray,Medium]],universe}},
+Alignment->Left,Spacings->{.6,.2}],Spacer[0]
+}}],FrameMargins->4];
+
+
+(* ::Subsubsection:: *)
 (*State Vector & Layer*)
 
 
 TAStateVector[TAGrid[sV_]]:=sV;
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Adjacency Matrix*)
 
 
@@ -143,7 +192,7 @@ output=PadRight[m,{dim,dim}];
 ];
 
 
-(* ::Subsubsubsection::Closed:: *)
+(* ::Subsubsubsection:: *)
 (*Computing the Adjacency Matrix*)
 
 
@@ -165,6 +214,20 @@ gridMatrix=SparseArray[Automatic, {10, 19}, 0, {1, {{0, 3, 5, 7, 9, 11, 13, 15, 
 TAAdjacencyMatrix[layer_]:=Module[{
 currentLayer=layerFromOrder@Dimensions[gridMatrix][[2]]
 },
+If[layer>currentLayer+512,
+	Module[{fileName,file,remoteFileName,toDownloadLayer=Min[2^Round[Log[2,layer]],8192]},
+	fileName="TAMatrix-"<>ToString@toDownloadLayer<>".wl";
+	file=If[
+		FileExistsQ[FileNameJoin[{Directory[],fileName}]],
+		PrintTemporary["Found matrix in local folder."];
+		FileNameJoin[{Directory[],fileName}],
+		PrintTemporary["Downloading matrix..."];
+		ExtractArchive[onlineDirectory<>"/matrix/"<>fileName<>".zip",Directory[]][[1]]
+	];
+	gridMatrix=Import@file;
+	];
+	currentLayer=layerFromOrder@Dimensions[gridMatrix][[2]];
+];
 If[currentLayer<layer,gridMatrix=Nest[expandMatrix,gridMatrix,layer-currentLayer]];
 Return@symmetrize@gridMatrix[[All,;;orderFromLayer@layer]]
 ]
@@ -228,7 +291,21 @@ coordinates=If[exactCoordinates,{{0,0}},{{0.,0.}}];
 TACoordinates[layer_]:=Module[{
 currentLayer=layerFromOrder@Length@coordinates
 },
-If[currentLayer<layer,coordinates=Nest[TAExpandCoords,coordinates,layer-currentLayer]];
+If[(layer>currentLayer)\[And](layer>256),
+	Module[{fileName,file,toDownloadLayer=Min[2^Ceiling[Log[2,layer]],6000]},
+	fileName=If[exactCoordinates,"TAExactCoords-","TACoords-"]<>ToString@toDownloadLayer<>".wl";
+	file=If[
+		FileExistsQ[FileNameJoin[{Directory[],fileName}]],
+		PrintTemporary["Found coordinates in local folder."];
+		FileNameJoin[{Directory[],fileName}],
+		PrintTemporary["Downloading coordinates..."];
+		ExtractArchive[onlineDirectory<>"/coordinates/"<>fileName<>".zip",Directory[]][[1]]
+	];
+	coordinates=Import@file;
+	];
+	currentLayer=layerFromOrder@Length@coordinates;
+];
+If[(layer>currentLayer),coordinates=Nest[TAExpandCoords,coordinates,layer-currentLayer]];
 Return@coordinates[[;;orderFromLayer@layer]];
 ]
 
@@ -237,37 +314,7 @@ Return@coordinates[[;;orderFromLayer@layer]];
 (*Evolution*)
 
 
-(* ::Subsubsection::Closed:: *)
-(*Utilities*)
-
-
-(* ::Input::Initialization:: *)
-binary[n_]:=\!\(
-\*UnderoverscriptBox[\(\[Sum]\), \(i = 0\), \(23\)]\(\(IntegerDigits[n, 10, 24]\)[\([\(-1\) - i]\)]*
-\*SuperscriptBox[\(2\), \(i\)]\)\);
-
-
-layerFromOrder[order_]:=Ceiling[1/6 (-3+Sqrt[3(8 order-5)])];
-
-layerFromMatrix[matrix_] := Module[{order = Max @ Dimensions @ matrix, n, t},
- Return@layerFromOrder[order]];
-
-layerFromCoords[coords_] := Module[{order = Length @ coords, n, t},
-Return@layerFromOrder[order]];
-	
-orderFromLayer[layer_]:=1+3 (layer(layer+1))/2;
-
-TALayer[TAGrid[sV_]]:=layerFromOrder@Length@sV;
-
-
-TANegativeGrid[grid_]:={grid[[1]],
-SparseArray@Normal@(1-grid[[2]]),
-grid[[3]]};
-
-TANegativeRule[ruleNumber_]:=FromDigits[1-Reverse@IntegerDigits[ruleNumber,2,8],2];
-
-
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Computing the next grid*)
 
 
@@ -317,13 +364,13 @@ Return@TAGrid[stateVector]
 ];
 
 
-TANestEvolve[gr_,rN_,n_]:=Module[{i,grid=gr},
-Monitor[For[i=0,i<n,i++,grid=TAEvolve[grid,rN]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i+1]<>" of "<>ToString[n]}}];
+TANestEvolve[gr_,rN_,n_]:=Module[{i,grid=gr,rule=If[ListQ@rN,rN,{rN}]},
+Monitor[For[i=1,i<=n,i++,grid=TAEvolve[grid,rule[[Mod[i,Length@rule,1]]]]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i+1]<>" of "<>ToString[n]}}];
 Return@grid;
 ];
 
-TANestListEvolve[gr_,rN_,n_]:=Module[{i,grids={gr}},
-Monitor[For[i=0,i<n,i++,AppendTo[grids,TAEvolve[Last@grids,rN]]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i+1]<>" of "<>ToString[n]}}];
+TANestListEvolve[gr_,rN_,n_]:=Module[{i,grids={gr},rule=If[ListQ@rN,rN,{rN}]},
+Monitor[For[i=1,i<=n,i++,AppendTo[grids,TAEvolve[Last@grids,rule[[Mod[i,Length@rule,1]]]]]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i+1]<>" of "<>ToString[n]}}];
 Return@grids;
 ];
 
@@ -373,10 +420,10 @@ If[OptionValue["Labeled"],
 
 
 (* ::Input::Initialization:: *)
-Options[TAGridPlot]={"ImageSize" -> Medium,"Time"->Null, "Padding"->Automatic, "Parallel"->False};
+Options[TAGridPlot]={"ImageSize" -> Medium,"Time"->Null, "Padding"->Automatic, "Parallel"->False,"Framed"->False};
 
 TAGridPlot[TAGrid[stateVector_],OptionsPattern[]]:=Module[
-{x,displayedVertices,triangleEven, triangleOdd, trianglesEven={},trianglesOdd={},gridstate=stateVector[[-1,-1]],color,graphicsList={},evenLayered,oddLayered,coords=TACoordinates@layerFromOrder@Length@stateVector},
+{x,displayedVertices,triangleEven, triangleOdd, trianglesEven={},trianglesOdd={},gridstate=stateVector[[-1,-1]],color,graphicsList={},evenLayered,oddLayered,coords=TACoordinates@layerFromOrder@Length@stateVector,imageSize=OptionValue["ImageSize" ]},
 
 (*basic shapes*)
 triangleEven=Triangle[{{-1/Sqrt[3],0},{1/(2Sqrt[3]),1/2},{1/(2Sqrt[3]),-1/2}}];
@@ -408,30 +455,38 @@ If[trianglesOdd!={},AppendTo[graphicsList,Translate[triangleOdd,trianglesOdd]]];
 If[OptionValue["Time"]=!=Null,AppendTo[graphicsList,Text[Style[OptionValue["Time"],FontSize->Scaled@.06],Scaled[{.98,.01}],{Right,Bottom}]]];
 
 (*output with different Padding options*)
+If[OptionValue["ImageSize" ]=="Proportional",
+imageSize=3*layerFromOrder@Length@stateVector
+];
+
 Return@Which[
 
 NumberQ@OptionValue["Padding"],
-	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
-PlotRangePadding->{OptionValue["Padding"],OptionValue["Padding"]},PlotRange->Norm@coords[[-1]],ImageSize->OptionValue["ImageSize"]],
+	If[OptionValue["Framed" ],Framed[#,FrameMargins->0,ContentPadding->False]&,Identity]@Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
+PlotRangePadding->{OptionValue["Padding"],OptionValue["Padding"]},PlotRange->Norm@coords[[-1]],ImageSize->imageSize],
 
 OptionValue["Padding"]===Automatic,
-	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
-PlotRangePadding->{4,4},PlotRange->Norm@coords[[-1]],ImageSize->OptionValue["ImageSize"]],
+	If[OptionValue["Framed" ],Framed[#,FrameMargins->0,ContentPadding->False]&,Identity]@Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
+PlotRangePadding->{Scaled[.05],Scaled[.05]},PlotRange->Norm@coords[[-1]],ImageSize->imageSize],
 
 OptionValue["Padding"]===None,
-Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],ImageSize->OptionValue["ImageSize"]]
+	If[OptionValue["Framed" ],Framed[#,FrameMargins->0,ContentPadding->False]&,Identity]@Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],ImageSize->imageSize]
 
 ];
 
 ];
 
 
-Options[TAEvolutionPlot]={"ImageSize" -> Medium, "Timed"->True, "Pause"->False, "Animated"->True};
+Options[TAEvolutionPlot]={"ImageSize" -> Medium, "Timed"->True, "Pause"->False, "Animated"->True, "Select"->"All"};
 
 TAEvolutionPlot[grid_, ruleNumber_, steps_, OptionsPattern[]] := 
 Module[{x,i, grids = TANestListEvolve[grid, ruleNumber, steps]},
 	
-	grids = TAGridPlot[grids[[#]], "ImageSize" -> OptionValue["ImageSize"],"Time"->If[OptionValue["Timed"],(#-1),Null]]& /@ Range@Length@grids;
+	grids = Transpose@{grids,Range[0,Length@grids-1]};
+	If[OptionValue["Select"]=="Even", grids=grids[[1;;;;2]]];
+	If[OptionValue["Select"]=="Odd", grids=grids[[2;;;;2]]];
+	grids = TAGridPlot[#[[1]], "ImageSize" -> OptionValue["ImageSize"],"Time"->If[OptionValue["Timed"],#[[2]],Null]]& /@ grids;
+	
 	
 	If[OptionValue["Pause"],
 	For[i=0,i<Length[grids]/16,i++,
@@ -439,7 +494,6 @@ PrependTo[grids,First@grids];
 AppendTo[grids,Last@grids];
 AppendTo[grids,Last@grids];
 ]];	
-
 	
 	Return @ If[OptionValue["Animated"],ListAnimate[grids],grids];
 ]
@@ -522,7 +576,7 @@ TAStartLogo=TAGrid[
 SparseArray[({#,1}->1)&/@{2,3,5,6,8,11,13,16,17,19,21,22,23,27,29,31,33,34,35,41,44,49,58,67,78,88},{166,1}]];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Miscellaneous *)
 
 
@@ -534,7 +588,7 @@ coordinates
 coordinates=TACoordinates[layer-2];
 Column[{
 ClickPane[
-Dynamic@Framed@TAGridPlot[TAGrid[stateVector],"ImageSize"->Medium, "Padding"->0],
+Dynamic@Framed@TAGridPlot[TAGrid[stateVector],"ImageSize"->Large, "Padding"->0],
 Module[{index=Nearest[coordinates->"Index",#][[1]]},
 stateVector=ReplacePart[stateVector,{index,1}->Mod[stateVector[[index,1]]+1,2]]
 ]&],Button["Done",DialogReturn@TAGrid[stateVector]]}]
