@@ -123,9 +123,7 @@ TALayer[TAGrid[sV_]]:=layerFromOrder@Length@sV;
 TAConfigurationVector[TAGrid[sV_]]:=Normal[4*sV+TAAdjacencyMatrix[layerFromOrder@Length@sV] . sV][[All,1]];
 
 
-TANegativeGrid[grid_]:={grid[[1]],
-SparseArray@Normal@(1-grid[[2]]),
-grid[[3]]};
+TANegativeGrid[TAGrid[sV_]]:=TAGrid[SparseArray@Normal@(1-sV)];
 
 TANegativeRule[ruleNumber_]:=FromDigits[1-Reverse@IntegerDigits[ruleNumber,2,8],2];
 
@@ -138,7 +136,7 @@ TANegativeRule[ruleNumber_]:=FromDigits[1-Reverse@IntegerDigits[ruleNumber,2,8],
  {
  interpretation=Interpretation[
  If[layerFromOrder[Length[sV]]-2<=64,
- Deploy@TAGridPlot[TAGrid[sV],"ImageSize"->Tiny],
+ Deploy@TAGridPlot[TAGrid[sV],"ImageSize"->Tiny,"Framed"->(sV[[-1,-1]]==0)],
  Deploy@largeGridRepresentation[layerFromOrder[Length[sV]]-2,Total[Abs[sV[[-1,-1]]-sV][[All,1]]],If[sV[[-1,-1]]==0,White,Purple]]
  ],TAGrid[sV]]
  },
@@ -365,12 +363,12 @@ Return@TAGrid[stateVector]
 
 
 TANestEvolve[gr_,rN_,n_]:=Module[{i,grid=gr,rule=If[ListQ@rN,rN,{rN}]},
-Monitor[For[i=1,i<=n,i++,grid=TAEvolve[grid,rule[[Mod[i,Length@rule,1]]]]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i+1]<>" of "<>ToString[n]}}];
+Monitor[For[i=1,i<=n,i++,grid=TAEvolve[grid,rule[[Mod[i,Length@rule,1]]]]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i]<>" of "<>ToString[n]}}];
 Return@grid;
 ];
 
 TANestListEvolve[gr_,rN_,n_]:=Module[{i,grids={gr},rule=If[ListQ@rN,rN,{rN}]},
-Monitor[For[i=1,i<=n,i++,AppendTo[grids,TAEvolve[Last@grids,rule[[Mod[i,Length@rule,1]]]]]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i+1]<>" of "<>ToString[n]}}];
+Monitor[For[i=1,i<=n,i++,AppendTo[grids,TAEvolve[Last@grids,rule[[Mod[i,Length@rule,1]]]]]],Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i]<>" of "<>ToString[n]}}];
 Return@grids;
 ];
 
@@ -462,15 +460,15 @@ imageSize=3*layerFromOrder@Length@stateVector
 Return@Which[
 
 NumberQ@OptionValue["Padding"],
-	If[OptionValue["Framed" ],Framed[#,FrameMargins->0,ContentPadding->False]&,Identity]@Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
-PlotRangePadding->{OptionValue["Padding"],OptionValue["Padding"]},PlotRange->Norm@coords[[-1]],ImageSize->imageSize],
+	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
+PlotRangePadding->{OptionValue["Padding"],OptionValue["Padding"]},PlotRange->Norm@coords[[-1]],ImageSize->imageSize,Frame->OptionValue["Framed" ],FrameTicks->False],
 
 OptionValue["Padding"]===Automatic,
-	If[OptionValue["Framed" ],Framed[#,FrameMargins->0,ContentPadding->False]&,Identity]@Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
-PlotRangePadding->{Scaled[.05],Scaled[.05]},PlotRange->Norm@coords[[-1]],ImageSize->imageSize],
+	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
+PlotRangePadding->{Scaled[.05],Scaled[.05]},PlotRange->Norm@coords[[-1]],ImageSize->imageSize,Frame->OptionValue["Framed" ],FrameTicks->False],
 
 OptionValue["Padding"]===None,
-	If[OptionValue["Framed" ],Framed[#,FrameMargins->0,ContentPadding->False]&,Identity]@Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],ImageSize->imageSize]
+	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],ImageSize->imageSize,Frame->OptionValue["Framed" ],FrameTicks->False]
 
 ];
 
