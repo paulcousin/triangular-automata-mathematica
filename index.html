@@ -30,7 +30,7 @@
 
 
 <p class='Subtitle' style='color: #800080;text-align: center;'>
- The 256 Elementary Cellular Automata of the 2D Plane
+ Mathematica Package
 </p>
 
 
@@ -54,7 +54,7 @@
 
 
 <p class="Text">
- Run the following command to import the package.
+ Run the following command to import the package from the URL https://paulcousin.github.io/triangular-automata-mathematica/TriangularAutomata.wl .
 </p>
 
 
@@ -183,7 +183,7 @@
 </table>
 
 <p class="Section">
- Basic functions
+ Functions
 </p>
 
 
@@ -207,11 +207,11 @@
 
 
 <p class="Input">
- <img src="HTMLFiles/index_17.png" alt="index_17.png" width="207" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_17.png" alt="index_17.png" width="117" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_18.gif" alt="index_18.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_18.gif" alt="index_18.gif" width="100" height="100" style="vertical-align:middle" />
 </p>
 
 <p class="ItemNumbered">
@@ -221,25 +221,25 @@
 
 
 <p class="Input">
- <img src="HTMLFiles/index_19.png" alt="index_19.png" width="176" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_19.png" alt="index_19.png" width="86" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_20.gif" alt="index_20.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_20.gif" alt="index_20.gif" width="100" height="100" style="vertical-align:middle" />
 </p>
 
 <p class="ItemNumbered">
- <span style='font-weight: bold;color: #800080;'>TAStartRandom[n]</span>: a grid with cells that are randomly either alive or dead on n layers.
+ <span style='font-weight: bold;color: #800080;'>TAStartRandom[n,d]</span>: a grid with cells that are randomly either alive or dead on n layers, with density d (0.5 by default).
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_21.png" alt="index_21.png" width="215" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_21.png" alt="index_21.png" width="125" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_22.gif" alt="index_22.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_22.gif" alt="index_22.gif" width="100" height="100" style="vertical-align:middle" />
 </p>
 
 <p class="Subsection">
@@ -249,7 +249,7 @@
 
 
 <p class="Text">
- The <span style='font-weight: bold;color: #800080;'>TAEdit</span> function enables to edit a grid and copy the result.
+ With the <span style='font-weight: bold;color: #800080;'>TAEdit</span> function, you can edit a grid in a pop-up window.
 </p>
 
 
@@ -259,21 +259,7 @@
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_24.png" alt="index_24.png" width="370" height="404" style="vertical-align:middle" />
-</p>
-
-<p class="Text">
- Copy-paste the obtained grid:
-</p>
-
-
-
-<p class="Input">
- <img src="HTMLFiles/index_25.png" alt="index_25.png" width="131" height="22" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_26.gif" alt="index_26.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_24.gif" alt="index_24.gif" width="100" height="100" style="vertical-align:middle" />
 </p>
 
 <p class="Subsection">
@@ -283,17 +269,17 @@
 
 
 <p class="Text">
- We can evolve these grids with different rules using the function <span style='font-weight: bold;color: #800080;'>TAEvolve</span>. Let&rsquo;s try to evolve <span style='font-weight: bold;color: #800080;'>TAStartOneAlive</span> with rule 181.
+ We can evolve these grids with different rules using the function <span style='font-weight: bold;color: #800080;'>TAEvolve</span>. Let&rsquo;s try to evolve a single living cell with rule 181.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_27.png" alt="index_27.png" width="321" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_25.gif" alt="index_25.gif" width="214" height="102" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_28.gif" alt="index_28.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_26.gif" alt="index_26.gif" width="100" height="100" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
@@ -303,11 +289,33 @@
 
 
 <p class="Input">
- <img src="HTMLFiles/index_29.png" alt="index_29.png" width="385" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_27.png" alt="index_27.png" width="295" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_30.gif" alt="index_30.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_28.gif" alt="index_28.gif" width="100" height="100" style="vertical-align:middle" />
+</p>
+
+<p class="Text">
+ Grids wider than 64 layers will not be rendered. You can use&nbsp;&nbsp;<span style='font-weight: bold;color: #800080;'>TAGridPlot</span> to render them.
+</p>
+
+
+
+<p class="Input">
+ <img src="HTMLFiles/index_29.png" alt="index_29.png" width="295" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_30.gif" alt="index_30.gif" width="167" height="60" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_31.png" alt="index_31.png" width="102" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_32.gif" alt="index_32.gif" width="360" height="360" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
@@ -317,11 +325,11 @@
 
 
 <p class="Input">
- <img src="HTMLFiles/index_31.png" alt="index_31.png" width="700" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_33.png" alt="index_33.png" width="700" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_32.gif" alt="index_32.gif" width="600" height="600" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_34.gif" alt="index_34.gif" width="600" height="600" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
@@ -331,169 +339,25 @@
 
 
 <p class="Input">
- <img src="HTMLFiles/index_33.png" alt="index_33.png" width="315" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_35.png" alt="index_35.png" width="315" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_34.gif" alt="index_34.gif" width="404" height="436" style="vertical-align:middle" />
-</p>
-
-<p class="Section">
- Behavior
-</p>
-
-
-
-<p class="Text">
- In this section, a preliminary study of ETA is presented to motivate a future, more in-depth analysis. It is of particular interest to see what happens to a single living cell under different ETA rules so most of the following figures will come from this starting point.
-</p>
-
-
-
-<p class="Subsection">
- Beauty
-</p>
-
-
-
-<p class="Text">
- One of the most striking aspects of these automata is their aesthetic quality, which cannot be better illustrated than by a few selected examples.
-</p>
-
-
-
-<p class="Input">
- <img src="HTMLFiles/index_35.png" alt="index_35.png" width="544" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_36.gif" alt="index_36.gif" width="576" height="576" style="vertical-align:middle" />
-</p>
-
-<p class="Input">
- <img src="HTMLFiles/index_37.png" alt="index_37.png" width="544" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_38.gif" alt="index_38.gif" width="576" height="576" style="vertical-align:middle" />
-</p>
-
-<p class="Input">
- <img src="HTMLFiles/index_39.png" alt="index_39.png" width="544" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_40.gif" alt="index_40.gif" width="576" height="576" style="vertical-align:middle" />
-</p>
-
-<p class="Input">
- <img src="HTMLFiles/index_41.png" alt="index_41.png" width="544" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_42.gif" alt="index_42.gif" width="576" height="576" style="vertical-align:middle" />
-</p>
-
-<p class="Subsection">
- Chaos
-</p>
-
-
-
-<p class="Text">
- Given the existing literature on cellular automata, it is quite expected to see some of these rules behave chaotically. The example of rule 53 confirms it. 
-</p>
-
-
-
-<p class="Input">
- <img src="HTMLFiles/index_43.png" alt="index_43.png" width="110" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_44.gif" alt="index_44.gif" width="512" height="155" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_36.gif" alt="index_36.gif" width="404" height="436" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
- Starting from two randomly generated 64 layers wide grids that are completely similar except for the central cell, the trajectories strongly diverge.
+ <span style='font-weight: bold;color: #800080;'>TAEvolutionPlot3D[start,rule,steps]</span> creates a 3-dimensional space-time plot.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_45.gif" alt="index_45.gif" width="361" height="60" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_37.png" alt="index_37.png" width="772" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_46.gif" alt="index_46.gif" width="336" height="180" style="vertical-align:middle" />
-</p>
-
-<p class="Input">
- <img src="HTMLFiles/index_47.png" alt="index_47.png" width="874" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_48.gif" alt="index_48.gif" width="600" height="318" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_49.png" alt="index_49.png" width="62" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Subsection">
- Fractals
-</p>
-
-
-
-<p class="Text">
- Some ETA rules produce remarkable scale-free structures. 
-</p>
-
-
-
-<p class="Input">
- <img src="HTMLFiles/index_50.png" alt="index_50.png" width="544" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_51.gif" alt="index_51.gif" width="576" height="576" style="vertical-align:middle" />
-</p>
-
-<p class="Input">
- <img src="HTMLFiles/index_52.png" alt="index_52.png" width="551" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_53.gif" alt="index_53.gif" width="576" height="576" style="vertical-align:middle" />
-</p>
-
-<p class="Input">
- <img src="HTMLFiles/index_54.png" alt="index_54.png" width="544" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_55.gif" alt="index_55.gif" width="576" height="576" style="vertical-align:middle" />
-</p>
-
-<p class="Subsection">
- Space-Time
-</p>
-
-
-
-<p class="Text">
- Similar to the way Elementary Cellular Automata [<span style='color: #800080;'>18-19</span>] are most often represented, the evolution of an ETA can be displayed in one single plot. Here, an instant is two-dimensional, so adding the dimension of time creates a 3D structure. In these <span style='font-weight: bold;'>space-time plots</span>, time flows downward. The successive grids are stacked beneath each other, starting from the initial conditions at the top. To avoid the infinite planes created by an alive environment, we can display only the cells that have the opposite state to it at each time step. A lot of information is therefore lost. We do not see most of the internal structure and we cannot know the state of the environment. Nevertheless, this representation helps visualize some properties of ETA that are difficult to notice otherwise. For instance, certain rules create 3D space-time fractals.
-</p>
-
-
-
-<p class="Input">
- <img src="HTMLFiles/index_56.png" alt="index_56.png" width="772" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_57.gif" alt="index_57.gif" width="360" height="370" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_38.gif" alt="index_38.gif" width="360" height="370" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
@@ -503,229 +367,144 @@
 
 
 <p class="Input">
- <img src="HTMLFiles/index_58.png" alt="index_58.png" width="664" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_39.png" alt="index_39.png" width="664" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Input">
- <img src="HTMLFiles/index_59.gif" alt="index_59.gif" width="533" height="506" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_40.gif" alt="index_40.gif" width="363" height="345" style="vertical-align:middle" />
 </p>
 
 <p class="Subsection">
- Self-Reproduction
+ Alternating Rules
 </p>
 
 
 
 <p class="Text">
- As mentioned in reference [<span style='color: #800080;'>17</span>], one of the original motivations for the development of cellular automata was to create a mathematical model of self-reproduction. Interestingly, 4 of the 256 ETA rules naturally reproduce any finite pattern given as initial conditions: rules <span style='font-weight: bold;'>85</span>, <span style='font-weight: bold;'>90</span>, <span style='font-weight: bold;'>165</span> and <span style='font-weight: bold;'>170</span>. A proof of self-reproduction based on path counting already exists for rule 170 [<span style='color: #800080;'>17</span>]. Similarly spirited proofs could probably be proposed for the others.
+ In the functions that use nested evolution, you can always provide a list of rule numbers through which the functions will go one by one.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_60.png" alt="index_60.png" width="291" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_41.gif" alt="index_41.gif" width="412" height="39" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_61.gif" alt="index_61.gif" width="404" height="436" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_42.gif" alt="index_42.gif" width="576" height="502" style="vertical-align:middle" />
 </p>
 
 <p class="Subsection">
- Noise
+ Twin Rules
 </p>
 
 
 
 <p class="Text">
- Some rules seem to generate a pretty good noise. For example, if we pick a simple starting point without symmetries, rule 37 will usually turn it into an expanding disk with a random-looking interior.
+ <span style='font-weight: bold;color: #800080;'>TANegativeGrid</span> returns the negative of a grid and <span style='font-weight: bold;color: #800080;'>TANegativeRule</span> returns the number of the twin rule that have the same effect but in the negative world.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_62.gif" alt="index_62.gif" width="151" height="44" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_43.png" alt="index_43.png" width="238" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_63.gif" alt="index_63.gif" width="180" height="180" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_44.gif" alt="index_44.gif" width="100" height="100" style="vertical-align:middle" />
 </p>
 
 <p class="Input">
- <img src="HTMLFiles/index_64.gif" alt="index_64.gif" width="462" height="39" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_45.png" alt="index_45.png" width="148" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_65.gif" alt="index_65.gif" width="576" height="562" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_46.png" alt="index_46.png" width="23" height="17" style="vertical-align:middle" />
+</p>
+
+<p class="Input">
+ <img src="HTMLFiles/index_47.gif" alt="index_47.gif" width="693" height="102" style="vertical-align:middle" />
+</p>
+
+<p class="Output">
+ <img src="HTMLFiles/index_48.gif" alt="index_48.gif" width="749" height="362" style="vertical-align:middle" />
 </p>
 
 <p class="Subsection">
- Textures
+ Center Columns
 </p>
 
 
 
 <p class="Text">
- Organic textures can be obtained by applying other rules to this pseudorandom grid.
+ The center column produced over the iterations of a rule can be efficiently computed with the function<span style='font-weight: bold;color: #800080;'>TACenterColumn</span>.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_66.png" alt="index_66.png" width="637" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_49.png" alt="index_49.png" width="170" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_67.gif" alt="index_67.gif" width="576" height="566" style="vertical-align:middle" />
-</p>
-
-<!--
-<p class="Input">
- <img src="HTMLFiles/index_68.png" alt="index_68.png" width="637" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_69.gif" alt="index_69.gif" width="576" height="562" style="vertical-align:middle" />
-</p>
--->
-
-<p class="Input">
- <img src="HTMLFiles/index_70.png" alt="index_70.png" width="637" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_71.gif" alt="index_71.gif" width="576" height="561" style="vertical-align:middle" />
-</p>
-
-<p class="Input">
- <img src="HTMLFiles/index_72.png" alt="index_72.png" width="644" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_73.gif" alt="index_73.gif" width="576" height="564" style="vertical-align:middle" />
-</p>
-
-<p class="Subsection">
- Boring Rules
-</p>
-
-
-
-<p class="Text">
- There is an <span style='font-weight: bold;'>identity</span> rule which leaves any grid unchanged: rule 240.
-</p>
-
-
-
-<p class="Input">
- <img src="HTMLFiles/index_74.png" alt="index_74.png" width="117" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_75.gif" alt="index_75.gif" width="512" height="155" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_50.png" alt="index_50.png" width="360" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Text">
- And a <span style='font-weight: bold;'>negative</span> rule that swaps alive and dead states: rule 15.
+ You&nbsp;&nbsp;can specify the starting grid for this computation.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_76.png" alt="index_76.png" width="110" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_51.gif" alt="index_51.gif" width="283" height="102" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_77.gif" alt="index_77.gif" width="512" height="155" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_52.png" alt="index_52.png" width="360" height="17" style="vertical-align:middle" />
 </p>
-
-<p class="Subsection">
- Twins
-</p>
-
-
 
 <p class="Text">
- A simple procedure can be followed to find the evil twin of a rule that has the same effect but in the <span style='font-weight: bold;'>negative</span> world. To find it, take the number in its binary form (with the leading zeros needed for the number to be 8 digits long), swap ones and zeros and read it backwards. Let us take rule 214 as an example.
+ The&nbsp;&nbsp;center columns can be displayed in a square plot to make some properties of their structure apparent.
 </p>
 
 
 
-<p class="Item">
- First, find the binary form of the rule number:&nbsp;&nbsp;&nbsp;<span><span><img src="HTMLFiles/index_78.png" alt="index_78.png" width="110" height="19" style="vertical-align:middle" /></span></span>
+<p class="Input">
+ <img src="HTMLFiles/index_53.png" alt="index_53.png" width="721" height="17" style="vertical-align:middle" />
 </p>
 
-
-
-<p class="Item">
- then swap ones and zeros:&nbsp;&nbsp;&nbsp;<span><span><img src="HTMLFiles/index_79.png" alt="index_79.png" width="74" height="19" style="vertical-align:middle" /></span></span>
+<p class="Output">
+ <img src="HTMLFiles/index_54.gif" alt="index_54.gif" width="360" height="359" style="vertical-align:middle" />
 </p>
-
-
-
-<p class="Item">
-  and finally reverse it:&nbsp;&nbsp;&nbsp;<span><span><img src="HTMLFiles/index_80.png" alt="index_80.png" width="110" height="19" style="vertical-align:middle" /></span></span>
-</p>
-
-
 
 <p class="Text">
- Two functions help work in the negative world: <span style='font-weight: bold;color: #800080;'>TANegativeGrid</span> returns the negative of a grid and <span style='font-weight: bold;color: #800080;'>TANegativeRule</span> returns the number of the twin rule.
+ The two first layers of a grid starting with one living cell will remain uniform. The function <span style='font-weight: bold;color: #800080;'>TACenterColumn </span>returns their states as well.
 </p>
 
 
 
 <p class="Input">
- <img src="HTMLFiles/index_81.png" alt="index_81.png" width="148" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_55.png" alt="index_55.png" width="209" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_82.png" alt="index_82.png" width="23" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_56.png" alt="index_56.png" width="398" height="17" style="vertical-align:middle" />
 </p>
+
+<p class="Text">
+ These states can be plotted with RBG colors.
+</p>
+
+
 
 <p class="Input">
- <img src="HTMLFiles/index_83.png" alt="index_83.png" width="532" height="17" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_57.png" alt="index_57.png" width="643" height="17" style="vertical-align:middle" />
 </p>
 
 <p class="Output">
- <img src="HTMLFiles/index_84.gif" alt="index_84.gif" width="500" height="500" style="vertical-align:middle" />
+ <img src="HTMLFiles/index_58.gif" alt="index_58.gif" width="360" height="359" style="vertical-align:middle" />
 </p>
-
-<p class="Input">
- <img src="HTMLFiles/index_85.png" alt="index_85.png" width="653" height="17" style="vertical-align:middle" />
-</p>
-
-<p class="Output">
- <img src="HTMLFiles/index_86.gif" alt="index_86.gif" width="500" height="500" style="vertical-align:middle" />
-</p>
-
-<p class="Subsection">
-  Center Column
- </p>
- 
- 
- 
- <p class="Text">
-  The center column produced over the iterations of a rule can be efficiently computed with the function <span style='font-weight: bold;color: #800080;'>TACenterColumn.</span>
- </p>
- 
- 
- 
- <p class="Input">
-  <img src="HTMLFiles/index_87.png" alt="index_87.png" width="300" height="17" style="vertical-align:middle" />
- </p>
- 
- <p class="Output">
-  <img src="HTMLFiles/index_88.png" alt="index_88.png" width="360" height="17" style="vertical-align:middle" />
- </p>
- 
- <p class="Input">
-  <img src="HTMLFiles/index_89.png" alt="index_89.png" width="549" height="17" style="vertical-align:middle" />
- </p>
- 
- <p class="Output">
-  <img src="HTMLFiles/index_90.gif" alt="index_90.gif" width="360" height="217" style="vertical-align:middle" />
- </p>
- 
 
 <p class="Section">
  Final Thoughts

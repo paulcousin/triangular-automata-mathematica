@@ -2747,7 +2747,7 @@ Floor[100 Dynamic[0.75 ----------------------------------------------]]
   color: #808080;
   text-align: left;
   line-height:                1
-If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15530]
+If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$149586]
         -2. + Inherited;
   padding: 8px;
 }
@@ -2759,7 +2759,7 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15530]
   color: #808080;
   text-align: left;
   line-height:                1
-If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15546]
+If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$149602]
         -2. + Inherited;
   padding: 8px;
 }
@@ -2772,7 +2772,7 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15546]
   color: #808080;
   text-align: left;
   line-height:                1
-If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15562]
+If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$149618]
         -1. + Inherited;
   padding: 8px;
 }
@@ -2784,7 +2784,7 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15562]
   color: #808080;
   text-align: left;
   line-height:                1
-If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
+If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$149634]
         -1. + Inherited;
   padding: 8px;
 }
@@ -4277,6 +4277,13 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
   padding: 8px;
 }
 .NumericalApproximationInline {
+  padding: 8px;
+}
+/* NumericalApproximationInterp:*/
+.NumericalApproximationInterp {
+  padding: 8px;
+}
+.NumericalApproximationInterpInline {
   padding: 8px;
 }
 /* PartitionsP:*/
@@ -7998,6 +8005,7 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
 /* EntityTypeLabel:*/
 .EntityTypeLabel {
   font-size: 9px;
+  font-family: Source Sans Pro;
   font-weight: normal;
   text-decoration: none;
   color: #999999;
@@ -8005,6 +8013,7 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
 }
 .EntityTypeLabelInline {
   font-size: 9px;
+  font-family: Source Sans Pro;
   font-weight: normal;
   text-decoration: none;
   color: #999999;
@@ -8015,6 +8024,13 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
   padding: 8px;
 }
 .EntitySublabelInline {
+  padding: 8px;
+}
+/* EntityLabelSublabel:*/
+.EntityLabelSublabel {
+  padding: 8px;
+}
+.EntityLabelSublabelInline {
   padding: 8px;
 }
 /* Entity:*/
@@ -8126,37 +8142,37 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
 }
 /* GeneralizedEntityBase:*/
 .GeneralizedEntityBase {
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   color: #653510;
   padding: 8px;
 }
 .GeneralizedEntityBaseInline {
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   color: #653510;
   padding: 8px;
 }
 /* GeneralizedEntityClassBase:*/
 .GeneralizedEntityClassBase {
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   color: #653510;
   padding: 8px;
 }
 .GeneralizedEntityClassBaseInline {
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   color: #653510;
   padding: 8px;
 }
 /* GeneralizedEntityInfo:*/
 .GeneralizedEntityInfo {
   font-size: 11px;
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   font-weight: normal;
   color: #A6A6A6;
   padding: 8px;
 }
 .GeneralizedEntityInfoInline {
   font-size: 11px;
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   font-weight: normal;
   color: #A6A6A6;
   padding: 8px;
@@ -8164,14 +8180,14 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
 /* GeneralizedEntityInfoItem:*/
 .GeneralizedEntityInfoItem {
   font-size: 11px;
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   font-weight: normal;
   color: #A6A6A6;
   padding: 8px;
 }
 .GeneralizedEntityInfoItemInline {
   font-size: 11px;
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   font-weight: normal;
   color: #A6A6A6;
   padding: 8px;
@@ -8185,9 +8201,11 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
 }
 /* GeneralizedEntityFrame:*/
 .GeneralizedEntityFrame {
+  /* font-size: 0.92 Inherited is not currently supported */
   padding: 8px;
 }
 .GeneralizedEntityFrameInline {
+  /* font-size: 0.92 Inherited is not currently supported */
   padding: 8px;
 }
 /* GeneralizedEntityInfoGrid:*/
@@ -8200,14 +8218,14 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
 /* GeneralizedEntityLabel:*/
 .GeneralizedEntityLabel {
   font-size: 11px;
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   font-weight: normal;
   color: #999999;
   padding: 8px;
 }
 .GeneralizedEntityLabelInline {
   font-size: 11px;
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   font-weight: normal;
   color: #999999;
   padding: 8px;
@@ -8215,14 +8233,14 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
 /* EntityPropertyInfoItem:*/
 .EntityPropertyInfoItem {
   font-size: 11px;
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   font-weight: normal;
   color: #9E693F;
   padding: 8px;
 }
 .EntityPropertyInfoItemInline {
   font-size: 11px;
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   font-weight: normal;
   color: #9E693F;
   padding: 8px;
@@ -8243,14 +8261,14 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
 }
 /* QualifiedEntityPropertyBase:*/
 .QualifiedEntityPropertyBase {
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   font-style: Italic;
   font-weight: Plain;
   color: #653510;
   padding: 8px;
 }
 .QualifiedEntityPropertyBaseInline {
-  font-family: Helvetica;
+  font-family: Source Sans Pro;
   font-style: Italic;
   font-weight: Plain;
   color: #653510;
@@ -8332,12 +8350,14 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
 }
 /* ImplicitEntityPropertyBase:*/
 .ImplicitEntityPropertyBase {
-  font-family: Helvetica;
+  /* font-size: 0.92 Inherited is not currently supported */
+  font-family: Source Sans Pro;
   color: #653510;
   padding: 8px;
 }
 .ImplicitEntityPropertyBaseInline {
-  font-family: Helvetica;
+  /* font-size: 0.92 Inherited is not currently supported */
+  font-family: Source Sans Pro;
   color: #653510;
   padding: 8px;
 }
@@ -8920,6 +8940,20 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
   padding: 8px;
 }
 .AudioBox1Inline {
+  padding: 8px;
+}
+/* CompressedImageBA:*/
+.CompressedImageBA {
+  padding: 8px;
+}
+.CompressedImageBAInline {
+  padding: 8px;
+}
+/* CompressedImageAO:*/
+.CompressedImageAO {
+  padding: 8px;
+}
+.CompressedImageAOInline {
   padding: 8px;
 }
 /* TemplateBoxErrorDisplayStyle:*/
@@ -10732,6 +10766,153 @@ If[1. + --------------- < 0, 0, System`Convert`CSSDump`c$15578]
   padding: 8px;
 }
 .FormElementInline {
+  padding: 8px;
+}
+/* NotebookToolbarText:*/
+.NotebookToolbarText {
+  font-size: 12px;
+  font-family: Source Sans Pro;
+  font-weight: Plain;
+  color: #333333;
+  padding: 8px;
+}
+.NotebookToolbarTextInline {
+  font-size: 12px;
+  font-family: Source Sans Pro;
+  font-weight: Plain;
+  color: #333333;
+  padding: 8px;
+}
+/* NotebookToolbarGhostText:*/
+.NotebookToolbarGhostText {
+  font-size: 14px;
+  font-family: Source Sans Pro;
+  font-style: Italic;
+  font-weight: Plain;
+  color: #666666;
+  padding: 8px;
+}
+.NotebookToolbarGhostTextInline {
+  font-size: 14px;
+  font-family: Source Sans Pro;
+  font-style: Italic;
+  font-weight: Plain;
+  color: #666666;
+  padding: 8px;
+}
+/* NotebookToolbarTooltip:*/
+.NotebookToolbarTooltip {
+  font-size: 12px;
+  font-family: Source Sans Pro;
+  font-weight: Plain;
+  color: #333333;
+  padding: 8px;
+}
+.NotebookToolbarTooltipInline {
+  font-size: 12px;
+  font-family: Source Sans Pro;
+  font-weight: Plain;
+  color: #333333;
+  padding: 8px;
+}
+/* NotebookToolbarButton:*/
+.NotebookToolbarButton {
+  padding: 8px;
+}
+.NotebookToolbarButtonInline {
+  padding: 8px;
+}
+/* NotebookToolbarButtonFrame:*/
+.NotebookToolbarButtonFrame {
+  padding: 8px;
+}
+.NotebookToolbarButtonFrameInline {
+  padding: 8px;
+}
+/* NotebookToolbarButtonFrameDefault:*/
+.NotebookToolbarButtonFrameDefault {
+  padding: 8px;
+}
+.NotebookToolbarButtonFrameDefaultInline {
+  padding: 8px;
+}
+/* NotebookToolbarButtonFrameHover:*/
+.NotebookToolbarButtonFrameHover {
+  padding: 8px;
+}
+.NotebookToolbarButtonFrameHoverInline {
+  padding: 8px;
+}
+/* NotebookToolbarButtonFramePressed:*/
+.NotebookToolbarButtonFramePressed {
+  padding: 8px;
+}
+.NotebookToolbarButtonFramePressedInline {
+  padding: 8px;
+}
+/* NotebookToolbarButtonOverlay:*/
+.NotebookToolbarButtonOverlay {
+  padding: 8px;
+}
+.NotebookToolbarButtonOverlayInline {
+  padding: 8px;
+}
+/* NotebookToolbarMenuHeader:*/
+.NotebookToolbarMenuHeader {
+  font-size: 11px;
+  font-family: Source Sans Pro;
+  font-weight: Plain;
+  color: #333333;
+  padding: 8px;
+}
+.NotebookToolbarMenuHeaderInline {
+  font-size: 11px;
+  font-family: Source Sans Pro;
+  font-weight: Plain;
+  color: #333333;
+  padding: 8px;
+}
+/* NotebookToolbarMenuItem:*/
+.NotebookToolbarMenuItem {
+  font-size: 12px;
+  font-family: Source Sans Pro;
+  font-weight: Plain;
+  color: #333333;
+  padding: 8px;
+}
+.NotebookToolbarMenuItemInline {
+  font-size: 12px;
+  font-family: Source Sans Pro;
+  font-weight: Plain;
+  color: #333333;
+  padding: 8px;
+}
+/* NotebookToolbarDelimiter:*/
+.NotebookToolbarDelimiter {
+  padding: 8px;
+}
+.NotebookToolbarDelimiterInline {
+  padding: 8px;
+}
+/* NotebookToolbarMenuDelimiter:*/
+.NotebookToolbarMenuDelimiter {
+  padding: 8px;
+}
+.NotebookToolbarMenuDelimiterInline {
+  padding: 8px;
+}
+/* NotebookToolbarSpacer:*/
+.NotebookToolbarSpacer {
+  padding: 8px;
+}
+.NotebookToolbarSpacerInline {
+  padding: 8px;
+}
+/* NotebookToolbarOverflow:*/
+.NotebookToolbarOverflow {
+  padding: 8px;
+}
+.NotebookToolbarOverflowInline {
   padding: 8px;
 }
 /* OutputSizeLimit:*/
