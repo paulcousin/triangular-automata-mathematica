@@ -136,7 +136,7 @@ TANegativeRule[ruleNumber_]:=FromDigits[1-Reverse@IntegerDigits[ruleNumber,2,8],
  {
  interpretation=Interpretation[
  If[layerFromOrder[Length[sV]]-2<=64,
- Deploy@TAGridPlot[TAGrid[sV],"ImageSize"->Tiny,"Framed"->(sV[[-1,-1]]==0)],
+ Deploy@TAGridPlot[TAGrid[sV],"ImageSize"->Tiny,"Frame"->(sV[[-1,-1]]==0)],
  Deploy@largeGridRepresentation[layerFromOrder[Length[sV]]-2,Total[Abs[sV[[-1,-1]]-sV][[All,1]]],If[sV[[-1,-1]]==0,White,Purple]]
  ],TAGrid[sV]]
  },
@@ -213,7 +213,7 @@ TAAdjacencyMatrix[layer_]:=Module[{
 currentLayer=layerFromOrder@Dimensions[gridMatrix][[2]]
 },
 If[layer>currentLayer+512,
-	Module[{fileName,file,remoteFileName,toDownloadLayer=Min[2^Round[Log[2,layer]],8192]},
+	Module[{fileName,file,remoteFileName,toDownloadLayer=Min[2^Ceiling[Log[2,layer]],8192]},
 	fileName="TAMatrix-"<>ToString@toDownloadLayer<>".wl";
 	file=If[
 		FileExistsQ[FileNameJoin[{Directory[],fileName}]],
@@ -231,7 +231,7 @@ Return@symmetrize@gridMatrix[[All,;;orderFromLayer@layer]]
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Vertex Coordinates*)
 
 
@@ -289,9 +289,10 @@ coordinates=If[exactCoordinates,{{0,0}},{{0.,0.}}];
 TACoordinates[layer_]:=Module[{
 currentLayer=layerFromOrder@Length@coordinates
 },
-If[(layer>currentLayer)\[And](layer>256),
+If[layer>currentLayer+512,
 	Module[{fileName,file,toDownloadLayer=Min[2^Ceiling[Log[2,layer]],6000]},
 	fileName=If[exactCoordinates,"TAExactCoords-","TACoords-"]<>ToString@toDownloadLayer<>".wl";
+	Return@fileName;
 	file=If[
 		FileExistsQ[FileNameJoin[{Directory[],fileName}]],
 		PrintTemporary["Found coordinates in local folder."];
@@ -308,12 +309,8 @@ Return@coordinates[[;;orderFromLayer@layer]];
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Evolution*)
-
-
-(* ::Subsubsection:: *)
-(*Computing the next grid*)
 
 
 (* ::Input::Initialization:: *)
@@ -408,7 +405,10 @@ unknownColor,EdgeForm[None],
 Options[TARulePlot]={"Labeled"->False};
 
 TARulePlot[rN_,OptionsPattern[]] :=Module[{ruleNumber=rN,graphicsGrid},
-graphicsGrid=GraphicsGrid[ArrayReshape[TATransformationPlot[#,ruleState[ruleNumber,#]]&/@Range[7,0,-1],{2,4}], Frame -> True];
+graphicsGrid=GraphicsGrid[
+ArrayReshape[TATransformationPlot[#,ruleState[ruleNumber,#]]&/@Range[7,0,-1],{2,4}], 
+Frame -> True,Background->White,ImagePadding->None,ImageMargins->0
+];
 If[OptionValue["Labeled"],
 	Return@Grid[{{Text[ruleNumber " = " BaseForm[ruleNumber, 2]]},
 	{graphicsGrid}}],
@@ -418,7 +418,7 @@ If[OptionValue["Labeled"],
 
 
 (* ::Input::Initialization:: *)
-Options[TAGridPlot]={"ImageSize" -> Medium,"Time"->Null, "Padding"->Automatic, "Parallel"->False,"Framed"->False};
+Options[TAGridPlot]={"ImageSize" -> Medium,"Time"->Null, "Padding"->Automatic, "Parallel"->False,"Frame"->False};
 
 TAGridPlot[TAGrid[stateVector_],OptionsPattern[]]:=Module[
 {x,displayedVertices,triangleEven, triangleOdd, trianglesEven={},trianglesOdd={},gridstate=stateVector[[-1,-1]],color,graphicsList={},evenLayered,oddLayered,coords=TACoordinates@layerFromOrder@Length@stateVector,imageSize=OptionValue["ImageSize" ]},
@@ -454,21 +454,21 @@ If[OptionValue["Time"]=!=Null,AppendTo[graphicsList,Text[Style[OptionValue["Time
 
 (*output with different Padding options*)
 If[OptionValue["ImageSize" ]=="Proportional",
-imageSize=3*layerFromOrder@Length@stateVector
+imageSize=128*Mean@Last[coords];
 ];
 
 Return@Which[
 
 NumberQ@OptionValue["Padding"],
 	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
-PlotRangePadding->{OptionValue["Padding"],OptionValue["Padding"]},PlotRange->Norm@coords[[-1]],ImageSize->imageSize,Frame->OptionValue["Framed" ],FrameTicks->False],
+PlotRangePadding->{OptionValue["Padding"],OptionValue["Padding"]},PlotRange->Norm@coords[[-1]],ImageSize->imageSize,Frame->OptionValue["Frame" ],FrameTicks->False],
 
 OptionValue["Padding"]===Automatic,
 	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
-PlotRangePadding->{Scaled[.05],Scaled[.05]},PlotRange->Norm@coords[[-1]],ImageSize->imageSize,Frame->OptionValue["Framed" ],FrameTicks->False],
+PlotRangePadding->{Scaled[.05],Scaled[.05]},PlotRange->Norm@coords[[-1]],ImageSize->imageSize,Frame->OptionValue["Frame" ],FrameTicks->False],
 
 OptionValue["Padding"]===None,
-	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],ImageSize->imageSize,Frame->OptionValue["Framed" ],FrameTicks->False]
+	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],ImageSize->imageSize,Frame->OptionValue["Frame" ],FrameTicks->False]
 
 ];
 
@@ -586,7 +586,7 @@ coordinates
 coordinates=TACoordinates[layer-2];
 Column[{
 ClickPane[
-Dynamic@Framed@TAGridPlot[TAGrid[stateVector],"ImageSize"->Large, "Padding"->0],
+Dynamic@TAGridPlot[TAGrid[stateVector],"ImageSize"->Large, "Padding"->0,"Frame"->True],
 Module[{index=Nearest[coordinates->"Index",#][[1]]},
 stateVector=ReplacePart[stateVector,{index,1}->Mod[stateVector[[index,1]]+1,2]]
 ]&],Button["Done",DialogReturn@TAGrid[stateVector]]}]
