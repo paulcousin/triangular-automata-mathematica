@@ -94,6 +94,7 @@ Begin["`Private`"];
 aliveColor=RGBColor[0.5, 0, 0.5];deadColor=GrayLevel[1];unknownColor = GrayLevel[0.85];
 exactCoordinates= False;
 onlineDirectory="https://files.paulcousin.net/triangular-automata";
+localDirectory=FileNameJoin@{Directory[],"Triangular Automata"};
 
 
 (* ::Subsection:: *)
@@ -216,9 +217,9 @@ If[layer>currentLayer+512,
 	Module[{fileName,file,remoteFileName,toDownloadLayer=Min[2^Ceiling[Log[2,layer]],8192]},
 	fileName="TAMatrix-"<>ToString@toDownloadLayer<>".wl";
 	file=If[
-		FileExistsQ[FileNameJoin[{Directory[],fileName}]],
-		PrintTemporary["Found matrix in local folder."];
-		FileNameJoin[{Directory[],fileName}],
+		FileExistsQ[FileNameJoin[{localDirectory,fileName}]],
+		PrintTemporary["Found matrix in local directory."];
+		FileNameJoin[{localDirectory,fileName}],
 		PrintTemporary["Downloading matrix..."];
 		ExtractArchive[onlineDirectory<>"/matrix/"<>fileName<>".zip",Directory[]][[1]]
 	];
@@ -292,11 +293,10 @@ currentLayer=layerFromOrder@Length@coordinates
 If[layer>currentLayer+512,
 	Module[{fileName,file,toDownloadLayer=Min[2^Ceiling[Log[2,layer]],6000]},
 	fileName=If[exactCoordinates,"TAExactCoords-","TACoords-"]<>ToString@toDownloadLayer<>".wl";
-	Return@fileName;
 	file=If[
-		FileExistsQ[FileNameJoin[{Directory[],fileName}]],
-		PrintTemporary["Found coordinates in local folder."];
-		FileNameJoin[{Directory[],fileName}],
+		FileExistsQ[FileNameJoin[{localDirectory,fileName}]],
+		PrintTemporary["Found coordinates in local directory."];
+		FileNameJoin[{localDirectory,fileName}],
 		PrintTemporary["Downloading coordinates..."];
 		ExtractArchive[onlineDirectory<>"/coordinates/"<>fileName<>".zip",Directory[]][[1]]
 	];
@@ -402,12 +402,12 @@ unknownColor,EdgeForm[None],
 }},ImageSize->{128,75}];
 
 
-Options[TARulePlot]={"Labeled"->False};
+Options[TARulePlot]={"Labeled"->False,"Portrait"->False,"Frame"->True,"PlotRangePadding"->Automatic};
 
 TARulePlot[rN_,OptionsPattern[]] :=Module[{ruleNumber=rN,graphicsGrid},
 graphicsGrid=GraphicsGrid[
-ArrayReshape[TATransformationPlot[#,ruleState[ruleNumber,#]]&/@Range[7,0,-1],{2,4}], 
-Frame -> True,Background->White,ImagePadding->None,ImageMargins->0
+If[OptionValue["Portrait"],Transpose,Identity]@ArrayReshape[TATransformationPlot[#,ruleState[ruleNumber,#]]&/@Range[7,0,-1],{2,4}], 
+Frame -> OptionValue["Frame"],Background->White,ImagePadding->None,ImageMargins->0,PlotRangePadding -> OptionValue["PlotRangePadding"]
 ];
 If[OptionValue["Labeled"],
 	Return@Grid[{{Text[ruleNumber " = " BaseForm[ruleNumber, 2]]},
@@ -418,7 +418,14 @@ If[OptionValue["Labeled"],
 
 
 (* ::Input::Initialization:: *)
-Options[TAGridPlot]={"ImageSize" -> Medium,"Time"->Null, "Padding"->Automatic, "Parallel"->False,"Frame"->False};
+Options[TAGridPlot]={
+"ImageSize" -> Medium,
+"Time"->Null,
+ "Padding"->Scaled[.03],
+ "Parallel"->False,
+"Frame"->False,
+"FrameStyle" ->Automatic
+};
 
 TAGridPlot[TAGrid[stateVector_],OptionsPattern[]]:=Module[
 {x,displayedVertices,triangleEven, triangleOdd, trianglesEven={},trianglesOdd={},gridstate=stateVector[[-1,-1]],color,graphicsList={},evenLayered,oddLayered,coords=TACoordinates@layerFromOrder@Length@stateVector,imageSize=OptionValue["ImageSize" ]},
@@ -454,22 +461,17 @@ If[OptionValue["Time"]=!=Null,AppendTo[graphicsList,Text[Style[OptionValue["Time
 
 (*output with different Padding options*)
 If[OptionValue["ImageSize" ]=="Proportional",
-imageSize=128*Mean@Last[coords];
+imageSize=128*Norm@Last[coords];
 ];
 
-Return@Which[
-
-NumberQ@OptionValue["Padding"],
-	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
-PlotRangePadding->{OptionValue["Padding"],OptionValue["Padding"]},PlotRange->Norm@coords[[-1]],ImageSize->imageSize,Frame->OptionValue["Frame" ],FrameTicks->False],
-
-OptionValue["Padding"]===Automatic,
-	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],
-PlotRangePadding->{Scaled[.05],Scaled[.05]},PlotRange->Norm@coords[[-1]],ImageSize->imageSize,Frame->OptionValue["Frame" ],FrameTicks->False],
-
-OptionValue["Padding"]===None,
-	Graphics[graphicsList,Background->If[gridstate==0,deadColor,aliveColor],ImageSize->imageSize,Frame->OptionValue["Frame" ],FrameTicks->False]
-
+Return@Graphics[
+graphicsList,
+Background->If[gridstate==0,deadColor,aliveColor],PlotRangePadding->{OptionValue["Padding"],OptionValue["Padding"]},
+PlotRange->If[OptionValue["Padding"]===None,Automatic,Norm@coords[[-1]]],
+ImageSize->imageSize,
+Frame->OptionValue["Frame" ],
+FrameTicks->False,
+FrameStyle->OptionValue["FrameStyle" ]
 ];
 
 ];
