@@ -75,8 +75,8 @@ TAStartRandom::usage="TAStartRandom[n] is a grid with a random distribution of a
 
 
 TAEdit::usage="TAEdit[grid] allows you to edit the grid and copy the result.";
-TACenterColumn::usage="TACenterColumn[grid,ruleNumber,n] gives the center column of the grid evolved n times.";
-TAThreeCenterColumns::usage="TAThirdCenterColumn[grid,ruleNumber,n] gives the sequence of states of the 0th, 1st and 2nd layers.";
+TACenterColumn::usage="TACenterColumn[ruleNumber,n] gives the center column of the grid evolved n times.";
+TAThreeCenterColumns::usage="TAThirdCenterColumn[ruleNumber,n] gives the sequence of states of the 0th, 1st and 2nd layers.";
 
 
 (* ::Section:: *)
