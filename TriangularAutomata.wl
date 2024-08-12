@@ -27,6 +27,7 @@ BeginPackage["TriangularAutomata`"];
 TAConfigurationVector::usage="TAConfigurationVector[grid] returns the configuration vector of the grid.";
 TANegativeGrid::usage="TANegativeGrid[grid] returns the grid with all states inverted";
 TANegativeRule::usage="TANegativeRule[ruleNumber] returns the rule number that would have the same effect in a negative grid.";
+TALayer::usage="TALayer[grid] returns the number of layers in the grid.";
 
 
 (* ::Subsection:: *)
