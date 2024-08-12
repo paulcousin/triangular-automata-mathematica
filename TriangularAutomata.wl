@@ -77,6 +77,8 @@ TAStartRandom::usage="TAStartRandom[n] is a grid with a random distribution of a
 TAEdit::usage="TAEdit[grid] allows you to edit the grid and copy the result.";
 TACenterColumn::usage="TACenterColumn[ruleNumber,n] gives the center column of the grid evolved n times.";
 TAThreeCenterColumns::usage="TAThirdCenterColumn[ruleNumber,n] gives the sequence of states of the 0th, 1st and 2nd layers.";
+TASlice::usage="TASlice[ruleNumber,n] returns a slice of space-time plot.";
+TASlicePlot::usage="TASlicePlot[lines] returns plot of the slice.";
 
 
 (* ::Section:: *)
@@ -616,6 +618,45 @@ Monitor[
 	],
 Grid@{{ProgressIndicator[Dynamic[i],{0,n}],"computing grid "<>ToString[i+1]<>" of "<>ToString[n]}}];
 Return@values;]
+
+
+diagonalIndices[n_]:=Table[Which[
+l<0,Floor[2+3/2 l^2],
+l==0,1,
+l>0,2+3/2 l(l-1)
+],{l,-n,n}];
+
+TASlice[rule_,n_,gr_:TAStartOneAlive]:=Module[
+{
+grid=gr,
+lines= {{0,1,0}},
+newLine,lastLine
+},
+
+Monitor[
+For[i=1,i<=n,i++,
+grid=TAEvolve[grid,rule];
+newLine=Normal[TAStateVector[grid][[diagonalIndices[TALayer@grid],1]]];
+If[True,
+newLine= Split[newLine];
+newLine[[{1,-1}]]={First[newLine[[1]]]};
+newLine[[{1,-1}]]={First[newLine[[1]]]};
+newLine=Catenate@newLine;
+];
+AppendTo[lines,newLine]
+],i];
+
+Return@lines
+];
+
+Options[TASlicePlot]={"ImageSize"->Large, "Frame"->True, "Tight"->False };
+
+TASlicePlot[lines_]:=Module[{array},
+array=ArrayPad[#,(Max[Length/@lines]-Length[#])/2,Last[#]] &/@lines;
+Return@Graphics@{Purple,GeometricTransformation[
+Rectangle[{-1/2, -1/2}, {1/2, 1/2}],
+-Position[array,1][[All,{-1,1}]]]};
+];
 
 
 (* ::Section::Closed:: *)
