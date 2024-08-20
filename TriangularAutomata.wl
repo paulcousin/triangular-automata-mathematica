@@ -654,9 +654,9 @@ Options[TASlicePlot]={"ImageSize"->Large, "Frame"->True, "Tight"->False };
 
 TASlicePlot[lines_]:=Module[{array},
 array=ArrayPad[#,(Max[Length/@lines]-Length[#])/2,Last[#]] &/@lines;
-Return@Graphics@{Purple,GeometricTransformation[
+Return@Graphics[{Purple,GeometricTransformation[
 Rectangle[{-1/2, -1/2}, {1/2, 1/2}],
--Position[array,1][[All,{-1,1}]]]};
+-Position[array,1][[All,{-1,1}]]]},PlotRangePadding->None];
 ];
 
 
