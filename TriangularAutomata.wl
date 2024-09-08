@@ -627,6 +627,7 @@ l==0,1,
 l>0,2+3/2 l(l-1)
 ],{l,-n,n}];
 
+
 TASlice[rule_,n_,gr_:TAStartOneAlive]:=Module[
 {
 grid=gr,
@@ -650,13 +651,18 @@ AppendTo[lines,newLine]
 Return@lines
 ];
 
-Options[TASlicePlot]={"ImageSize"->Large, "Frame"->True, "Tight"->False };
 
-TASlicePlot[lines_]:=Module[{array},
+Options[TASlicePlot]={
+"ImageSize" -> Medium
+};
+
+TASlicePlot[lines_, OptionsPattern[]]:=Module[{array},
 array=ArrayPad[#,(Max[Length/@lines]-Length[#])/2,Last[#]] &/@lines;
-Return@Graphics[{Purple,GeometricTransformation[
-Rectangle[{-1/2, -1/2}, {1/2, 1/2}],
--Position[array,1][[All,{-1,1}]]]},PlotRangePadding->None];
+Return@Graphics[
+{Purple,GeometricTransformation[Rectangle[{-1/2, -1/2}, {1/2, 1/2}],-Position[array,1][[All,{-1,1}]]]},
+ImageSize->OptionValue["ImageSize"],
+PlotRangePadding->None
+];
 ];
 
 
