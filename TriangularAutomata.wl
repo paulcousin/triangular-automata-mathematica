@@ -312,7 +312,7 @@ Return@coordinates[[;;orderFromLayer@layer]];
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Evolution*)
 
 
@@ -410,7 +410,7 @@ Options[TARulePlot]={"Labeled"->False,"Portrait"->False,"Frame"->True,"PlotRange
 TARulePlot[rN_,OptionsPattern[]] :=Module[{ruleNumber=rN,graphicsGrid},
 graphicsGrid=GraphicsGrid[
 If[OptionValue["Portrait"],Transpose,Identity]@ArrayReshape[TATransformationPlot[#,ruleState[ruleNumber,#]]&/@Range[7,0,-1],{2,4}], 
-Frame -> OptionValue["Frame"],Background->White,ImagePadding->None,ImageMargins->0,PlotRangePadding -> OptionValue["PlotRangePadding"]
+Frame -> OptionValue["Frame"],Background->White,ImagePadding->None,ImageMargins->0,PlotRangePadding -> OptionValue["PlotRangePadding"],ImageSize->520
 ];
 If[OptionValue["Labeled"],
 	Return@Grid[{{Text[ruleNumber " = " BaseForm[ruleNumber, 2]]},
