@@ -425,17 +425,22 @@ Options[TAGridPlot]={
 "ImageSize" -> Medium,
 "Time"->Null,
  "Padding"->Scaled[.03],
- "Parallel"->False,
+"Parallel"->False,
 "Frame"->False,
-"FrameStyle" ->Automatic
+"FrameStyle" ->Automatic,
+"Rotation"->0,
+"Translation"->{0,0},
+"PlotRegion"->Automatic,
+"AspectRatio"->Automatic,
+"PlotRangePadding"->Automatic
 };
 
 TAGridPlot[TAGrid[stateVector_],OptionsPattern[]]:=Module[
-{x,displayedVertices,triangleEven, triangleOdd, trianglesEven={},trianglesOdd={},gridstate=stateVector[[-1,-1]],color,graphicsList={},evenLayered,oddLayered,coords=TACoordinates@layerFromOrder@Length@stateVector,imageSize=OptionValue["ImageSize" ]},
+{x,displayedVertices,triangleEven, triangleOdd, trianglesEven={},trianglesOdd={},gridstate=stateVector[[-1,-1]],color,graphicsList={},evenLayered,oddLayered,coords=(#+OptionValue["Translation" ])&/@TACoordinates@layerFromOrder@Length@stateVector . RotationMatrix[-OptionValue["Rotation" ]],imageSize=OptionValue["ImageSize" ]},
 
 (*basic shapes*)
-triangleEven=Triangle[{{-1/Sqrt[3],0},{1/(2Sqrt[3]),1/2},{1/(2Sqrt[3]),-1/2}}];
-triangleOdd=Triangle[{{1/Sqrt[3],0},{-1/(2Sqrt[3]),1/2},{-(1/(2Sqrt[3])),-1/2}}];
+triangleEven=Triangle[{{-1/Sqrt[3],0},{1/(2Sqrt[3]),1/2},{1/(2Sqrt[3]),-1/2}} . RotationMatrix[-OptionValue["Rotation" ]]];
+triangleOdd=Triangle[{{1/Sqrt[3],0},{-1/(2Sqrt[3]),1/2},{-(1/(2Sqrt[3])),-1/2}} . RotationMatrix[-OptionValue["Rotation" ]]];
 
 (*select background color*)
 If[gridstate==0,
@@ -469,12 +474,15 @@ imageSize=128*Norm@Last[coords];
 
 Return@Graphics[
 graphicsList,
-Background->If[gridstate==0,deadColor,aliveColor],PlotRangePadding->{OptionValue["Padding"],OptionValue["Padding"]},
+Background->If[gridstate==0,deadColor,aliveColor],
 PlotRange->If[OptionValue["Padding"]===None,Automatic,Norm@coords[[-1]]],
 ImageSize->imageSize,
 Frame->OptionValue["Frame" ],
 FrameTicks->False,
-FrameStyle->OptionValue["FrameStyle" ]
+FrameStyle->OptionValue["FrameStyle" ],
+PlotRegion->OptionValue["PlotRegion" ],
+PlotRangePadding->OptionValue["Padding"],
+AspectRatio->OptionValue["AspectRatio" ]
 ];
 
 ];
@@ -656,10 +664,17 @@ Options[TASlicePlot]={
 "ImageSize" -> Medium
 };
 
-TASlicePlot[lines_, OptionsPattern[]]:=Module[{array},
-array=ArrayPad[#,(Max[Length/@lines]-Length[#])/2,Last[#]] &/@lines;
-Return@Graphics[
-{Purple,GeometricTransformation[Rectangle[{-1/2, -1/2}, {1/2, 1/2}],-Position[array,1][[All,{-1,1}]]]},
+TASlicePlot[lines_, OptionsPattern[]]:=Module[{i,array,graphicsList={},length=Max[Length/@lines]},
+array=ArrayPad[#,(length-Length[#])/2,Last[#]] &/@lines;
+For[i=1,i<=Length@lines,i++,
+If[First[array[[i]]]==0, 
+AppendTo[graphicsList,{Purple,GeometricTransformation[Rectangle[{-1/2, -1/2}, {1/2, 1/2}],{#[[1]],-i}&/@Position[array[[i]],1]]}],
+AppendTo[graphicsList,{
+Purple,Rectangle[{1/2, -1/2-i}, {1/2+length, 1/2-i}],
+White,GeometricTransformation[Rectangle[{-1/2, -1/2}, {1/2, 1/2}],{#[[1]],-i}&/@Position[array[[i]],0]]}]
+]
+];
+Return@Graphics[Catenate@graphicsList,
 ImageSize->OptionValue["ImageSize"],
 PlotRangePadding->None
 ];
