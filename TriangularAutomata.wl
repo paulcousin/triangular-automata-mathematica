@@ -668,14 +668,15 @@ TASlicePlot[lines_, OptionsPattern[]]:=Module[{i,array,graphicsList={},length=Ma
 array=ArrayPad[#,(length-Length[#])/2,Last[#]] &/@lines;
 For[i=1,i<=Length@lines,i++,
 If[First[array[[i]]]==0, 
-AppendTo[graphicsList,{Purple,Translate[Rectangle[{-1/2, -1/2}, {1/2, 1/2}],{#,-i}&/@Catenate[Position[array[[i]],1]]]}],
+AppendTo[graphicsList,{Purple,Translate[Rectangle[{0, 0}, {1, 1}],{#-1,-i}&/@Catenate[Position[array[[i]],1]]]}],
 AppendTo[graphicsList,{
-Purple,Rectangle[{1/2, -1/2-i}, {1/2+length, 1/2-i}],
-White,Translate[Rectangle[{-1/2, -1/2}, {1/2, 1/2}],{#,-i}&/@Catenate[Position[array[[i]],0]]]}]
+Purple,Rectangle[{0, -i}, {length, 1-i}],
+White,Translate[Rectangle[{0, 0}, {1, 1}],{#-1,-i}&/@Catenate[Position[array[[i]],0]]]}]
 ]
 ];
 Return@Graphics[graphicsList,
 ImageSize->OptionValue["ImageSize"],
+PlotRange->{{0,length},{-((length-1)/2),0}},
 PlotRangePadding->None
 ];
 ];
