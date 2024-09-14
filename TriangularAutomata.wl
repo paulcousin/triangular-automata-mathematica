@@ -636,20 +636,21 @@ l>0,2+3/2 l(l-1)
 ],{l,-n,n}];
 
 
-TASlice[rule_,n_,gr_:TAStartOneAlive]:=Module[
+TASlice[rN_,n_,gr_:TAStartOneAlive]:=Module[
 {
+i,
 grid=gr,
+rule=If[ListQ@rN,rN,{rN}],
 lines= {{0,1,0}},
 newLine,lastLine
 },
 
 Monitor[
 For[i=1,i<=n,i++,
-grid=TAEvolve[grid,rule];
+grid=TAEvolve[grid,rule[[Mod[i,Length@rule,1]]]];
 newLine=Normal[TAStateVector[grid][[diagonalIndices[TALayer@grid],1]]];
 If[True,
 newLine= Split[newLine];
-newLine[[{1,-1}]]={First[newLine[[1]]]};
 newLine[[{1,-1}]]={First[newLine[[1]]]};
 newLine=Catenate@newLine;
 ];
@@ -664,19 +665,25 @@ Options[TASlicePlot]={
 "ImageSize" -> Medium
 };
 
-TASlicePlot[lines_, OptionsPattern[]]:=Module[{i,array,graphicsList={},length=Max[Length/@lines]},
-array=ArrayPad[#,(length-Length[#])/2,Last[#]] &/@lines;
+TASlicePlot[lines_, OptionsPattern[]]:=Module[
+{
+i,
+array,
+graphicsList={},
+width=Max[Length/@lines],
+height=Length@lines
+},
+array=ArrayPad[#,(width-Length[#])/2,Last[#]] &/@lines;
 For[i=1,i<=Length@lines,i++,
 If[First[array[[i]]]==0, 
-AppendTo[graphicsList,{Purple,Translate[Rectangle[{0, 0}, {1, 1}],{#-1,-i}&/@Catenate[Position[array[[i]],1]]]}],
-AppendTo[graphicsList,{
-Purple,Rectangle[{0, -i}, {length, 1-i}],
-White,Translate[Rectangle[{0, 0}, {1, 1}],{#-1,-i}&/@Catenate[Position[array[[i]],0]]]}]
+If[!Equal@@array[[i]],AppendTo[graphicsList,{Purple,Translate[Rectangle[{0, 0}, {1, 1}],{#-1,-i}&/@Catenate[Position[array[[i]],1]]]}]],
+AppendTo[graphicsList,{Purple,Rectangle[{0, -i}, {width, 1-i}]}];
+If[!Equal@@array[[i]],AppendTo[graphicsList,{White,Translate[Rectangle[{0, 0}, {1, 1}],{#-1,-i}&/@Catenate[Position[array[[i]],0]]]}]]
 ]
 ];
 Return@Graphics[graphicsList,
 ImageSize->OptionValue["ImageSize"],
-PlotRange->{{0,length},{-((length-1)/2),0}},
+PlotRange->{{0,width},{-height,0}},
 PlotRangePadding->None
 ];
 ];
