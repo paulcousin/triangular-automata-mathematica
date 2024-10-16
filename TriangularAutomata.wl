@@ -28,6 +28,7 @@ TAConfigurationVector::usage="TAConfigurationVector[grid] returns the configurat
 TANegativeGrid::usage="TANegativeGrid[grid] returns the grid with all states inverted";
 TANegativeRule::usage="TANegativeRule[ruleNumber] returns the rule number that would have the same effect in a negative grid.";
 TALayer::usage="TALayer[grid] returns the number of layers in the grid.";
+TAPopulation::usage="TAPopulation[grid] returns the population the grid.";
 
 
 (* ::Subsection:: *)
@@ -69,6 +70,18 @@ TAEvolutionPlot3D::usage="TAEvolutionPlot[grid,ruleNumber,numberOfSteps] generat
 TAStartOneAlive::usage="TAStartOneAlive is a grid with only one alive cell.";
 TAStartLogo::usage="TAStartLogo is a grid with alive cells in the shape of the letters TA that includes all local configurations.";
 TAStartRandom::usage="TAStartRandom[n] is a grid with a random distribution of alive and dead cells on n layers.";
+
+
+(* ::Subsection:: *)
+(*Torus*)
+
+
+TATorus::usage="TATorus[stateVector] is an object representing a torus.";
+TAStateVectorT::usage="TAStateVectorT[TAGrid] returns the state vector.";
+TAAdjacencyMatrixT::usage="TAAdjacencyMatrixT[l] gives the adjacency matrix of the l layers wide torus.";
+TACoordinatesT::usage="TACoordinatesT[l] gives the coordinate vector of the l layers wide torus.";
+TATorusPlot::usage="TATorusPlot[torus] displays the torus.";
+TAStartRandomTorus::usage="TAStartRandomTorus[n] is a torus with a random distribution of alive and dead cells on n layers.";
 
 
 (* ::Subsection:: *)
@@ -122,6 +135,8 @@ orderFromLayer[layer_]:=1+3 (layer(layer+1))/2;
 
 TALayer[TAGrid[sV_]]:=layerFromOrder@Length@sV;
 
+TAPopulation[grid_]:=Total[If[Last@#[[1]]=={1},1-#[[1]],#[[1]]]][[1]]&@grid;
+
 
 (* ::Input::Initialization:: *)
 TAConfigurationVector[TAGrid[sV_]]:=Normal[4*sV+TAAdjacencyMatrix[layerFromOrder@Length@sV] . sV][[All,1]];
@@ -148,7 +163,9 @@ TANegativeRule[ruleNumber_]:=FromDigits[1-Reverse@IntegerDigits[ruleNumber,2,8],
 
 
 largeGridRepresentation[layers_,population_,universe_]:=Panel[Grid[{{
-Spacer[0],Graphics[{GrayLevel[0.8], Translate[Triangle[{{-3^Rational[-1, 2], 0}, {Rational[1, 2] 3^Rational[-1, 2], Rational[1, 2]}, {Rational[1, 2] 3^Rational[-1, 2], Rational[-1, 2]}}], {{{0.8660254037844388, -0.5}}, {{0.8660254037844388, 0.5}}, {{-0.8660254037844384, 0.5}}, {{1.7320508075688774`, 0.}}, {{1.7320508075688774`, 1.}}, {{0.8660254037844388, 1.5}}, {{-1.732050807568877, 0.}}, {{-0.8660254037844384, -1.5}}, {{0.8660254037844388, -1.5}}, {{2.5980762113533165`, 0.5}}, {{-2.598076211353315, -0.5}}, {{3.4641016151377553`, 0.}}}], Translate[Triangle[{{3^Rational[-1, 2], 0}, {Rational[-1, 2] 3^Rational[-1, 2], Rational[1, 2]}, {Rational[-1, 2] 3^Rational[-1, 2], Rational[-1, 2]}}], {{{0.5773502691896258, 0.}}, {{-0.28867513459481275`, 0.5}}, {{1.4433756729740645`, -0.5}}, {{0.577350269189626, 1.}}, {{-1.1547005383792512`, 0.}}, {{-1.1547005383792512`, -1.}}, {{0.577350269189626, -1.}}, {{2.3094010767585034`, 0.}}, {{2.3094010767585034`, 1.}}, {{1.4433756729740648`, 1.5}}, {{-2.02072594216369, -0.5}}, {{-0.28867513459481264`, -2.5}}, {{3.175426480542942, 0.5}}, {{-2.8867513459481273`, -1.}}}]}, Background -> GrayLevel[0, 0], ImageSize -> 50],Spacer[0],
+Spacer[0],
+Graphics[{GrayLevel[0.8], Translate[Triangle[{{-3^Rational[-1, 2], 0}, {Rational[1, 2] 3^Rational[-1, 2], Rational[1, 2]}, {Rational[1, 2] 3^Rational[-1, 2], Rational[-1, 2]}}], {{{0.8660254037844388, -0.5}}, {{0.8660254037844388, 0.5}}, {{-0.8660254037844384, 0.5}}, {{1.7320508075688774`, 0.}}, {{1.7320508075688774`, 1.}}, {{0.8660254037844388, 1.5}}, {{-1.732050807568877, 0.}}, {{-0.8660254037844384, -1.5}}, {{0.8660254037844388, -1.5}}, {{2.5980762113533165`, 0.5}}, {{-2.598076211353315, -0.5}}, {{3.4641016151377553`, 0.}}}], Translate[Triangle[{{3^Rational[-1, 2], 0}, {Rational[-1, 2] 3^Rational[-1, 2], Rational[1, 2]}, {Rational[-1, 2] 3^Rational[-1, 2], Rational[-1, 2]}}], {{{0.5773502691896258, 0.}}, {{-0.28867513459481275`, 0.5}}, {{1.4433756729740645`, -0.5}}, {{0.577350269189626, 1.}}, {{-1.1547005383792512`, 0.}}, {{-1.1547005383792512`, -1.}}, {{0.577350269189626, -1.}}, {{2.3094010767585034`, 0.}}, {{2.3094010767585034`, 1.}}, {{1.4433756729740648`, 1.5}}, {{-2.02072594216369, -0.5}}, {{-0.28867513459481264`, -2.5}}, {{3.175426480542942, 0.5}}, {{-2.8867513459481273`, -1.}}}]}, Background -> GrayLevel[0, 0], ImageSize -> 50],
+Spacer[0],
 Grid[{{Text[Style["layers:",Gray,Medium]],Text[Style[ToString@layers,Medium]]},
 {Text[Style["population:",Gray,Medium]],Text[Style[ToString@population,Medium]]},
 {Text[Style["universe:",Gray,Medium]],universe}},
@@ -160,10 +177,10 @@ Alignment->Left,Spacings->{.6,.2}],Spacer[0]
 (*State Vector & Layer*)
 
 
-TAStateVector[TAGrid[sV_]]:=sV;
+TAStateVector[grid_]:=grid[[1]];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Adjacency Matrix*)
 
 
@@ -338,27 +355,39 @@ digits=IntegerDigits[rN,2,8];
 stateVector=TAStateVector[grid];
 layer=TALayer@grid;
 
-lastSpecified=If[#=={},0,layerFromOrder@Last[#]]&@
-If[stateVector[[-1,-1]]==0,
-Position[Normal@stateVector,1][[All,1]],
-Position[Normal@stateVector,0][[All,1]]
+If[Head@grid===TAGrid,
+	lastSpecified=If[#=={},0,layerFromOrder@Last[#]]&@
+	If[stateVector[[-1,-1]]==0,
+	Position[Normal@stateVector,1][[All,1]],
+	Position[Normal@stateVector,0][[All,1]]
+	];
+
+	If[(lastSpecified==layer-2 )\[And] !OptionValue["Shrink"] ,
+		layer=(layer+1);
+		stateVector=ArrayReshape[stateVector,{orderFromLayer[layer],1},stateVector[[-1,1]]];
+	];
+	
+	If[ OptionValue["Shrink"],
+		layer=(layer-1);
+		stateVector=stateVector[[;;orderFromLayer[layer],All]];stateVector=ReplacePart[stateVector,Table[{n,1}->Normal@stateVector[[-1-3layer,1]],{n,-3layer,-1}]];
+	];
 ];
 
-If[(lastSpecified==layer-2 )\[And] !OptionValue["Shrink"],
-	layer=(layer+1);
-	stateVector=ArrayReshape[stateVector,{orderFromLayer[layer],1},stateVector[[-1,1]]];
+matrix=Which[
+Head@grid===TAGrid,TAAdjacencyMatrix[layer],
+Head@grid===TATorus,TAAdjacencyMatrixT[layerFromOrderT@Length@grid[[1]]]
 ];
 
-If[ OptionValue["Shrink"],
-	layer=(layer-1);
-	stateVector=stateVector[[;;orderFromLayer[layer],All]];stateVector=ReplacePart[stateVector,Table[{n,1}->Normal@stateVector[[-1-3layer,1]],{n,-3layer,-1}]];
-];
+stateVector=newState[matrix,stateVector,rN];
 
-stateVector=newState[TAAdjacencyMatrix[layer],stateVector,rN];
-
+If[Head@grid===TAGrid,
 stateVector=ReplacePart[stateVector,Table[{n,1}->Normal@stateVector[[-1-3layer,1]],{n,-3layer,-1}]];
+];
 
-Return@TAGrid[stateVector]
+Return@Which[
+Head@grid===TAGrid,TAGrid[stateVector],
+Head@grid===TATorus,TATorus[stateVector]
+];
 ];
 
 
@@ -392,8 +421,8 @@ If[Mod[c,4]>2,Purple,White],If[Mod[c,4]>2,EdgeForm[None],EdgeForm[Thickness@Smal
 
 (* ::Input::Initialization:: *)
 TATransformationPlot[before_,after_]:=
-GraphicsGrid[{{
-TAConfigurationPlot[before]->
+Graphics[{
+Inset[TAConfigurationPlot[before],{-1.3,0},Automatic,Scaled@1],Text[Style["\[Rule]",FontSize->Scaled@.25],Scaled@{.5,.528}],Inset[
 Graphics[{
 If[after==0,White,Purple], If[after==0,EdgeForm[Thickness@Small],EdgeForm[None]],
 	Triangle[{{-(1/Sqrt[3]),0},{1/(2 Sqrt[3]),1/2},{1/(2 Sqrt[3]),-(1/2)}}],
@@ -401,16 +430,23 @@ unknownColor,EdgeForm[None],
 	Translate[Triangle[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}}],1.1{{1/Sqrt[3],0}}],
 	Translate[Triangle[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}}],1.1{{1/Sqrt[3]-Sqrt[3]/2,1/2}}],
 	Translate[Triangle[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}}], 1.1{{1/Sqrt[3]-Sqrt[3]/2,-(1/2)}}]
-},ImageSize->{45,45}]
-}},ImageSize->{128,75}];
+}],{1.3,0},Automatic,Scaled@1]
+}];
 
 
-Options[TARulePlot]={"Labeled"->False,"Portrait"->False,"Frame"->True,"PlotRangePadding"->Automatic};
+Options[TARulePlot]={"Labeled"->False,"Portrait"->False,"Frame"->True,"ImageSize"->500};
 
 TARulePlot[rN_,OptionsPattern[]] :=Module[{ruleNumber=rN,graphicsGrid},
-graphicsGrid=GraphicsGrid[
-If[OptionValue["Portrait"],Transpose,Identity]@ArrayReshape[TATransformationPlot[#,ruleState[ruleNumber,#]]&/@Range[7,0,-1],{2,4}], 
-Frame -> OptionValue["Frame"],Background->White,ImagePadding->None,ImageMargins->0,PlotRangePadding -> OptionValue["PlotRangePadding"],ImageSize->520
+graphicsGrid=Graphics[
+Inset[TATransformationPlot[#,ruleState[ruleNumber,#]],{-2*Mod[#,4],.48(#-Mod[#,4])},Automatic,Scaled@.32]&/@Range[7,0,-1], 
+Frame->OptionValue["Frame"], FrameTicks->None, FrameStyle->Thick,
+Background->White,
+ImagePadding->None,
+ImageMargins->0,
+AspectRatio->1/3.5,
+PlotRange->All,
+PlotRangePadding -> {1.1,1},
+ImageSize->500
 ];
 If[OptionValue["Labeled"],
 	Return@Grid[{{Text[ruleNumber " = " BaseForm[ruleNumber, 2]]},
@@ -432,11 +468,18 @@ Options[TAGridPlot]={
 "Translation"->{0,0},
 "PlotRegion"->Automatic,
 "AspectRatio"->Automatic,
+"PlotRange"->Automatic,
 "PlotRangePadding"->Automatic
 };
 
-TAGridPlot[TAGrid[stateVector_],OptionsPattern[]]:=Module[
-{x,displayedVertices,triangleEven, triangleOdd, trianglesEven={},trianglesOdd={},gridstate=stateVector[[-1,-1]],color,graphicsList={},evenLayered,oddLayered,coords=(#+OptionValue["Translation" ])&/@TACoordinates@layerFromOrder@Length@stateVector . RotationMatrix[-OptionValue["Rotation" ]],imageSize=OptionValue["ImageSize" ]},
+TAGridPlot[grid_,OptionsPattern[]]:=Module[
+{x,head,stateVector,displayedVertices,triangleEven, triangleOdd, trianglesEven={},trianglesOdd={},gridstate,color,graphicsList={},evenLayered,oddLayered,coords,imageSize=OptionValue["ImageSize" ]},
+
+stateVector=grid[[1]];
+gridstate=stateVector[[-1,-1]];
+coords=TACoordinates@layerFromOrder@Length@stateVector;
+coords=coords . RotationMatrix[-OptionValue["Rotation" ]];
+coords=(#+OptionValue["Translation" ])&/@coords;
 
 (*basic shapes*)
 triangleEven=Triangle[{{-1/Sqrt[3],0},{1/(2Sqrt[3]),1/2},{1/(2Sqrt[3]),-1/2}} . RotationMatrix[-OptionValue["Rotation" ]]];
@@ -451,6 +494,7 @@ color= deadColor;
 displayedVertices=Drop[ArrayRules[ConstantArray[1,Dimensions@stateVector]-stateVector],-1][[;;,1,1]];
 ];
 
+
 (*compute two sets of coordinates for even and odd layers*)
 evenLayered=Map[EvenQ@layerFromOrder@#&,displayedVertices];
 oddLayered=Not/@evenLayered;
@@ -458,8 +502,8 @@ oddLayered=Not/@evenLayered;
 evenLayered = SparseArray[#->True&/@Pick[displayedVertices,evenLayered],Length@coords,False];
 oddLayered= SparseArray[#->True&/@Pick[displayedVertices,oddLayered],Length@coords,False];
 
-trianglesEven=Pick[coords,evenLayered]/.{x_}->{x,x,x};
-trianglesOdd=Pick[coords,oddLayered]/.{x_}->{x,x,x};
+trianglesEven=Pick[coords,evenLayered];
+trianglesOdd=Pick[coords,oddLayered];
 
 (*construct Graphics object*)
 AppendTo[graphicsList,color];
@@ -475,7 +519,10 @@ imageSize=128*Norm@Last[coords];
 Return@Graphics[
 graphicsList,
 Background->If[gridstate==0,deadColor,aliveColor],
-PlotRange->If[OptionValue["Padding"]===None,Automatic,Norm@coords[[-1]]],
+PlotRange->Which[
+OptionValue["Padding"]===None,Automatic,
+OptionValue["PlotRange"]===Automatic,Norm@coords[[-1]],
+True,OptionValue["PlotRange"]],
 ImageSize->imageSize,
 Frame->OptionValue["Frame" ],
 FrameTicks->False,
@@ -488,7 +535,12 @@ AspectRatio->OptionValue["AspectRatio" ]
 ];
 
 
-Options[TAEvolutionPlot]={"ImageSize" -> Medium, "Timed"->True, "Pause"->False, "Animated"->True, "Select"->"All"};
+Options[TAEvolutionPlot]={
+"ImageSize" -> Medium, 
+"Timed"->True, 
+"Pause"->False, 
+"Animated"->True, 
+"Select"->"All"};
 
 TAEvolutionPlot[grid_, ruleNumber_, steps_, OptionsPattern[]] := 
 Module[{x,i, grids = TANestListEvolve[grid, ruleNumber, steps]},
@@ -496,24 +548,32 @@ Module[{x,i, grids = TANestListEvolve[grid, ruleNumber, steps]},
 	grids = Transpose@{grids,Range[0,Length@grids-1]};
 	If[OptionValue["Select"]=="Even", grids=grids[[1;;;;2]]];
 	If[OptionValue["Select"]=="Odd", grids=grids[[2;;;;2]]];
-	grids = TAGridPlot[#[[1]], "ImageSize" -> OptionValue["ImageSize"],"Time"->If[OptionValue["Timed"],#[[2]],Null]]& /@ grids;
+	grids = Which[
+	Head[#[[1]]]===TAGrid,
+	TAGridPlot[#[[1]], "ImageSize" -> OptionValue["ImageSize"],"Time"->If[OptionValue["Timed"],#[[2]],Null]],
+	Head[#[[1]]]===TATorus,
+	TATorusPlot[#[[1]], "ImageSize" -> OptionValue["ImageSize"],"Time"->If[OptionValue["Timed"],#[[2]],Null]]
+	]& /@ grids;
 	
 	
 	If[OptionValue["Pause"],
 	For[i=0,i<Length[grids]/16,i++,
-PrependTo[grids,First@grids];
-AppendTo[grids,Last@grids];
-AppendTo[grids,Last@grids];
-]];	
+		PrependTo[grids,First@grids];
+		AppendTo[grids,Last@grids];
+		AppendTo[grids,Last@grids];
+	]];	
 	
 	Return @ If[OptionValue["Animated"],ListAnimate[grids],grids];
 ]
 
 
 (* ::Input::Initialization:: *)
-TAGridPlot3D[TAGrid[sV_],time_:0]:=Module[{x,level=time,stateVector=sV,coords,displayedVertices,shapeEven,shapeOdd,shapesEven={},shapesOdd={},shapes={},evenLayered,oddLayered,gridstate=sV[[-1,-1]],color},
+Options[TAGridPlot3D]={"Translation"->{0,0}};
+
+TAGridPlot3D[TAGrid[sV_],time_:0, OptionsPattern[]]:=Module[{x,level=time,stateVector=sV,coords,displayedVertices,shapeEven,shapeOdd,shapesEven={},shapesOdd={},shapes={},evenLayered,oddLayered,gridstate=sV[[-1,-1]],color},
 
 coords=TACoordinates@layerFromOrder@Length@stateVector;
+coords=(#+OptionValue["Translation" ])&/@coords;
 
 (*basic shapes*)
 shapeEven=MeshRegion[{{-1/Sqrt[3],0,0},{1/(2Sqrt[3]),1/2,0},{1/(2Sqrt[3]),-(1/2),0},{-1/Sqrt[3],0,1},{1/(2Sqrt[3]),1/2,1},{1/(2Sqrt[3]),-(1/2),1}},{Polygon[{{1,2,3},{4,5,6}}],Polygon[{{1,2,5,4},{2,3,6,5},{3,1,4,6}}]}];
@@ -548,13 +608,19 @@ Return@If[Union[shapesEven,shapesOdd]=={},EmptyRegion[3],RegionUnion[Map[Transla
 ];
 
 
-Options[TAEvolutionPlot3D]={"Mesh" -> False,"ImageSize"->Medium,"ViewPoint"->{1,0,.75},"ViewProjection"->"Orthographic"};
+Options[TAEvolutionPlot3D]={
+"Mesh" -> False,
+"ImageSize"->Medium,
+"ViewPoint"->{1,0,.75},
+"ViewProjection"->"Orthographic",
+"Translation"->{0,0}
+};
 
 TAEvolutionPlot3D[grid_,ruleNumber_,steps_, OptionsPattern[]]:=Module[
 	{regions,gridPlots},
 	
 	regions= TANestListEvolve[grid,ruleNumber,steps];
-	gridPlots=TAGridPlot3D[regions[[#]],#]&/@Range@Length@regions;
+	gridPlots=TAGridPlot3D[regions[[#]],#,"Translation"->{0,0}]&/@Range@Length@regions;
 
 	If[OptionValue["Mesh"],
 	Return@RegionUnion@gridPlots,
@@ -568,7 +634,7 @@ TAEvolutionPlot3D[grid_,ruleNumber_,steps_, OptionsPattern[]]:=Module[
 ]]];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Starting Points*)
 
 
@@ -588,21 +654,215 @@ SparseArray[({#,1}->1)&/@{2,3,5,6,8,11,13,16,17,19,21,22,23,27,29,31,33,34,35,41
 
 
 (* ::Subsection:: *)
+(*Torus*)
+
+
+layerSizeT[l_]:=Max[0,12l-6];orderFromLayerT[l_]:=6*l^2;
+
+layerFromOrderT[order_]:=Ceiling[Sqrt[order/6]];
+
+layerFromMatrixT[matrix_] := Module[{order = Max @ Dimensions @ matrix, n, t},
+ Return@layerFromOrderT[order]];
+
+layerFromCoordsT[coords_] := Module[{order = Length @ coords, n, t},
+Return@layerFromOrderT[order]];
+	
+
+
+
+ TATorus/:MakeBoxes[TATorus[sV_],form_]:=With[
+ {
+ interpretation=Interpretation[
+ If[layerFromOrderT[Length[sV]]<=32,
+ Deploy@TATorusPlot[TATorus[sV],"ImageSize"->Tiny,"Frame"->True],
+ Deploy@largeTorusRepresentation[layerFromOrderT[Length[sV]],Total[sV][[1]]]
+ ],TATorus[sV]]
+ },
+ MakeBoxes[interpretation,form]];
+
+
+largeTorusRepresentation[layers_,population_]:=Panel[Grid[{{
+Spacer[0],
+Graphics[{{EdgeForm[{Thickness[0.02`],GrayLevel[0.8]}],GrayLevel[1, 0],InterpretationBox[PolygonBox[{{2.780837256811621`*^-16,4.541451884327381`},{-3.9330127018922187`,2.2707259421636916`},{-3.93301270189222`,-2.2707259421636894`},{-8.342511770434863`*^-16,-4.541451884327381`},{3.9330127018922183`,-2.2707259421636925`},{3.9330127018922214`,2.270725942163687`}}],RegularPolygon[{4.541451884327381`,\[Pi]/2},6]]},GrayLevel[0.8],GeometricTransformationBox[TagBox[PolygonBox[NCache[{{-(1/Sqrt[3]),0},{1/(2 Sqrt[3]),1/2},{1/(2 Sqrt[3]),-(1/2)}},{{-0.5773502691896258`,0},{0.2886751345948129`,0.5`},{0.2886751345948129`,-0.5`}}]],"Triangle"],NCache[{{{1/(4 Sqrt[3])+Sqrt[3]/4,0}},{{7/(4 Sqrt[3])-Sqrt[3]/4,-1}},{{13/(4 Sqrt[3])-Sqrt[3]/4,1/2}},{{7/(4 Sqrt[3])-Sqrt[3]/4,1}},{{-(5/(4 Sqrt[3]))-Sqrt[3]/4,1}},{{-(5/(4 Sqrt[3]))-Sqrt[3]/4,-1}},{{19/(4 Sqrt[3])-Sqrt[3]/4,1}},{{13/(4 Sqrt[3])-Sqrt[3]/4,3/2}},{{7/(4 Sqrt[3])-Sqrt[3]/4,2}},{{-(11/(4 Sqrt[3]))-Sqrt[3]/4,1/2}},{{25/(4 Sqrt[3])-Sqrt[3]/4,1/2}},{{-(17/(4 Sqrt[3]))-Sqrt[3]/4,0}}},{{{0.5773502691896257`,0}},{{0.5773502691896258`,-1}},{{1.4433756729740645`,0.5`}},{{0.5773502691896258`,1}},{{-1.1547005383792515`,1}},{{-1.1547005383792515`,-1}},{{2.3094010767585034`,1}},{{1.4433756729740645`,1.5`}},{{0.5773502691896258`,2}},{{-2.0207259421636903`,0.5`}},{{3.175426480542942`,0.5`}},{{-2.886751345948129`,0}}}]],GeometricTransformationBox[TagBox[PolygonBox[NCache[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}},{{0.5773502691896258`,0},{-0.2886751345948129`,0.5`},{-0.2886751345948129`,-0.5`}}]],"Triangle"],NCache[{{{1/(2 Sqrt[3]),-(1/2)}},{{-(1/(4 Sqrt[3]))+Sqrt[3]/4,1/2}},{{11/(4 Sqrt[3])-Sqrt[3]/4,0}},{{5/(4 Sqrt[3])-Sqrt[3]/4,3/2}},{{-(1/(4 Sqrt[3]))-Sqrt[3]/4,1}},{{-(7/(4 Sqrt[3]))-Sqrt[3]/4,1/2}},{{-(7/(4 Sqrt[3]))-Sqrt[3]/4,-(1/2)}},{{17/(4 Sqrt[3])-Sqrt[3]/4,1/2}},{{17/(4 Sqrt[3])-Sqrt[3]/4,3/2}},{{11/(4 Sqrt[3])-Sqrt[3]/4,2}},{{-(13/(4 Sqrt[3]))-Sqrt[3]/4,0}},{{-(1/(4 Sqrt[3]))-Sqrt[3]/4,-2}},{{23/(4 Sqrt[3])-Sqrt[3]/4,1}},{{-(19/(4 Sqrt[3]))-Sqrt[3]/4,-(1/2)}}},{{{0.2886751345948129`,-0.5`}},{{0.28867513459481287`,0.5`}},{{1.154700538379252`,0}},{{0.288675134594813`,1.5`}},{{-0.5773502691896257`,1}},{{-1.4433756729740645`,0.5`}},{{-1.4433756729740645`,-0.5`}},{{2.0207259421636907`,0.5`}},{{2.0207259421636907`,1.5`}},{{1.154700538379252`,2}},{{-2.3094010767585034`,0}},{{-0.5773502691896257`,-2}},{{2.8867513459481295`,1}},{{-3.1754264805429417`,-0.5`}}}]]},Background->GrayLevel[1, 0],ImageSize->40,Frame->False,FrameTicks->False,FrameStyle->Automatic,PlotRange->4.541451884327381`,PlotRegion->{{0,1},{0,1}},PlotRangePadding->Scaled[0.01`]],
+Spacer[0],
+Grid[{{Text[Style["layers:",Gray,Medium]],Text[Style[ToString@layers,Medium]]},
+{Text[Style["population:",Gray,Medium]],Text[Style[ToString@population,Medium]]}},
+Alignment->Left,Spacings->{.6,.2}],Spacer[0]
+}}],FrameMargins->4];
+
+
+(* ::Input::Initialization:: *)
+layerBand[1]:={Band[{1,2},{5,6}]->1,{1,6}->1};
+layerBand[l_]:=Catenate@{
+{Band[{orderFromLayerT[l-1]+1,orderFromLayerT[l-1]+2},{orderFromLayerT[l]-1,orderFromLayerT[l]}]->1},
+{{orderFromLayerT[l-1]+1,orderFromLayerT[l]}->1},
+Table[Band[
+{orderFromLayerT[l-2]+1,orderFromLayerT[l-1]+2}+n{1+2(l-2),1+2(l-1)},
+{orderFromLayerT[l-2]+2l-3,orderFromLayerT[l-1]+2l-2}+n{1+2(l-2),1+2(l-1)},
+{2,2}]->1,
+{n,0,5}]
+};
+junctionBand[l_]:=Table[
+Band[
+{orderFromLayerT[l-1]+1,orderFromLayerT[l-1]+4(1+2(l-1))}+n{1+2(l-1),2l-1},
+{orderFromLayerT[l-1]+2l-1,orderFromLayerT[l-1]+3(1+2(l-1))+1}+n{2(l-1)+1,2l-1},
+{2,-2}]->1
+,{n,0,2}];
+TAAdjacencyMatrixT[l_]:=symmetrize@SparseArray@Catenate@Append[Table[layerBand@n,{n,1,l}],junctionBand[l]];
+
+
+(* ::Subsubsection:: *)
+(*Coordinates*)
+
+
+(* ::Input::Initialization:: *)
+TAExpandCoordsT[c_] := Module[
+{i,coords = c, layer = layerFromCoordsT @ c +1, new,layerSize},
+
+layerSize=layerSizeT@layer;
+
+new={coords[[-1]] +{1/(Sqrt[3]),-1}};
+
+	Table[
+		AppendTo[
+			new
+			,
+			Last[new] + Which[
+				i < 1*layerSize/6,
+					If[EvenQ@i,{1/(2 Sqrt[3]),1/2},{1/Sqrt[3],0}]
+				,
+				i < 2*layerSize/6,
+					If[OddQ@i,{-1/(2 Sqrt[3]),1/2},{1/(2 Sqrt[3]),1/2}]
+				,
+				i < 3*layerSize/6,
+					If[EvenQ@i,{-1/Sqrt[3],0},{-1/(2 Sqrt[3]),1/2}]
+				,
+				i < 4*layerSize/6,
+					If[OddQ@i,{-1/(2 Sqrt[3]),-1/2},{-1/Sqrt[3],0}]
+				,
+				i < 5*layerSize/6,
+					If[EvenQ@i,{1/(2 Sqrt[3]),-1/2},{-1/(2 Sqrt[3]),-1/2}]
+				,
+				i < 6*layerSize/6,
+					If[OddQ@i,{1/Sqrt[3],0},{1/(2 Sqrt[3]),-1/2}]
+			]
+		]
+		,
+		{i, 0, layerSize-2}
+	];
+	Return @Join[coords,new];
+]
+
+
+coordinatesT=Table[If[exactCoordinates,{1/(2Sqrt[3]),-1/2},{1./(2Sqrt[3]),-1./2}] . RotationMatrix[x],{x,0,-5*Pi/3,-Pi/3}];
+
+
+TACoordinatesT[layer_]:=Module[{
+currentLayer=layerFromCoordsT@coordinatesT
+},
+If[(layer>currentLayer),coordinatesT=Nest[TAExpandCoordsT,coordinatesT,layer-currentLayer]];
+Return@coordinatesT[[;;orderFromLayerT@layer]];
+]
+
+
+(* ::Subsubsection:: *)
+(*Starting Points*)
+
+
+TAStartRandomTorus[n_,d_:.5] :=TATorus[ArrayReshape[SparseArray@Transpose@{Table[Round[RandomReal[{-.5,.5}]+d],orderFromLayerT[n]]},{orderFromLayerT[n],1}]];
+
+
+(* ::Subsubsection:: *)
+(*Plot*)
+
+
+(* ::Input::Initialization:: *)
+Options[TATorusPlot]={
+"ImageSize" -> Medium,
+"Time"->Null,
+ "Padding"->Scaled[.03],
+"Parallel"->False,
+"Frame"->False,
+"FrameStyle" ->Automatic,
+"Rotation"->0,
+"Translation"->{0,0},
+"BoundaryDistance"->1/2,
+"EdgeThickness"->Scaled@.005
+};
+
+TATorusPlot[grid_,OptionsPattern[]]:=Module[
+{x,head,stateVector,displayedVerticesOdd,displayedVerticesEven,triangleEven, triangleOdd, trianglesEven={},trianglesOdd={},color,graphicsList={},evenLayered,oddLayered,coords,imageSize=OptionValue["ImageSize" ]},
+
+head=grid[[0]];
+stateVector=grid[[1]];
+coords=TACoordinatesT@layerFromOrder@Length@stateVector;
+coords=coords . RotationMatrix[-OptionValue["Rotation" ]];
+coords=(#+OptionValue["Translation" ])&/@coords;
+
+(*basic shapes*)
+triangleEven=Triangle[{{-1/Sqrt[3],0},{1/(2Sqrt[3]),1/2},{1/(2Sqrt[3]),-1/2}} . RotationMatrix[-OptionValue["Rotation" ]]];
+triangleOdd=Triangle[{{1/Sqrt[3],0},{-1/(2Sqrt[3]),1/2},{-(1/(2Sqrt[3])),-1/2}} . RotationMatrix[-OptionValue["Rotation" ]]];
+
+(*select background color*)
+
+displayedVerticesOdd=Select[Position[Normal[stateVector],{1}][[All,1]],OddQ];
+displayedVerticesEven=Select[Position[Normal[stateVector],{1}][[All,1]],EvenQ];
+
+(*compute two sets of coordinates for even and odd layers*)
+trianglesOdd=coords[[displayedVerticesOdd]];
+trianglesEven=coords[[displayedVerticesEven]];
+
+
+(*construct Graphics object*)
+AppendTo[graphicsList,aliveColor];
+If[trianglesEven!={},AppendTo[graphicsList,Translate[triangleEven,trianglesEven]]];
+If[trianglesOdd!={},AppendTo[graphicsList,Translate[triangleOdd,trianglesOdd]]];
+If[OptionValue["Time"]=!=Null,AppendTo[graphicsList,Text[Style[OptionValue["Time"],FontSize->Scaled@.06],Scaled[{.98,.01}],{Right,Bottom}]]];
+
+PrependTo[graphicsList,{EdgeForm[Thickness@OptionValue["EdgeThickness"]],White,RegularPolygon[{OptionValue["BoundaryDistance" ]+1/(2Sqrt[3])+Norm@Last[coords]/2,Pi/2},6]}];
+
+(*output with different Padding options*)
+If[OptionValue["ImageSize" ]=="Proportional",
+imageSize=128*Norm@Last[coords];
+];
+
+Return@Graphics[
+graphicsList,
+Background->deadColor,
+ImageSize->imageSize,
+Frame->OptionValue["Frame" ],
+FrameTicks->False,
+FrameStyle->OptionValue["FrameStyle" ],
+PlotRange->OptionValue["BoundaryDistance" ]+1/(2Sqrt[3])+Norm@Last[coords]/2,
+PlotRegion->{{0,1},{0,1}},
+PlotRangePadding->OptionValue["Padding" ]
+
+];
+
+];
+
+
+(* ::Subsection:: *)
 (*Miscellaneous *)
 
 
-TAEdit[TAGrid[sV_]]:=DialogInput[DynamicModule[{
-stateVector=sV,
-layer=layerFromOrder@Length@sV,
-coordinates
+TAEdit[grid_]:=DialogInput[DynamicModule[{
+stateVector=grid[[1]],
+layer,
+coordinates,
+gridQ=(Head[grid]===TAGrid),
+torusQ=(Head[grid]===TATorus)
 },
-coordinates=TACoordinates[layer-2];
+layer=layerFromOrder@Length@stateVector;
+coordinates=Which[gridQ,TACoordinates[layer-2],torusQ,TACoordinatesT[layer]];
 Column[{
 ClickPane[
-Dynamic@TAGridPlot[TAGrid[stateVector],"ImageSize"->Large, "Padding"->0,"Frame"->True],
+Dynamic@Which[
+gridQ,TAGridPlot[TAGrid[stateVector],"ImageSize"->Large, "Padding"->0,"Frame"->True],
+torusQ,TATorusPlot[TATorus[stateVector],"ImageSize"->Large, "Padding"->0,"Frame"->True]],
 Module[{index=Nearest[coordinates->"Index",#][[1]]},
 stateVector=ReplacePart[stateVector,{index,1}->Mod[stateVector[[index,1]]+1,2]]
-]&],Button["Done",DialogReturn@TAGrid[stateVector]]}]
+]&],Button["Done",DialogReturn@Which[gridQ,TAGrid[stateVector],torusQ,TATorus[stateVector]]]}]
 ]];
 
 
@@ -662,7 +922,8 @@ Return@lines
 
 
 Options[TASlicePlot]={
-"ImageSize" -> Medium
+"ImageSize" -> Medium,
+"Antialiasing"->True
 };
 
 TASlicePlot[lines_, OptionsPattern[]]:=Module[
