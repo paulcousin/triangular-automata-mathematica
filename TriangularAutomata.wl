@@ -434,19 +434,26 @@ unknownColor,EdgeForm[None],
 }];
 
 
-Options[TARulePlot]={"Labeled"->False,"Portrait"->False,"Frame"->True,"ImageSize"->500};
+Options[TARulePlot]={"Labeled"->False,"Portrait"->False,"Frame"->True,"ImageSize"->Automatic};
 
 TARulePlot[rN_,OptionsPattern[]] :=Module[{ruleNumber=rN,graphicsGrid},
 graphicsGrid=Graphics[
-Inset[TATransformationPlot[#,ruleState[ruleNumber,#]],{-2*Mod[#,4],.48(#-Mod[#,4])},Automatic,Scaled@.32]&/@Range[7,0,-1], 
+Inset[
+	TATransformationPlot[#,ruleState[ruleNumber,#]],
+	If[OptionValue["Portrait"]==False,{-2*Mod[#,4],.5(#-Mod[#,4])},{.5(Mod[#,4]-#),2*Mod[#,4]}],
+	Automatic,
+	If[OptionValue["Portrait"]==False,Scaled@.32,Scaled@.45]
+]&/@Range[7,0,-1], 
 Frame->OptionValue["Frame"], FrameTicks->None, FrameStyle->Thick,
 Background->White,
-ImagePadding->None,
-ImageMargins->0,
-AspectRatio->1/3.5,
+ImagePadding->None, ImageMargins->None,
+AspectRatio->If[OptionValue["Portrait"]==False,1/3.5,1.2],
 PlotRange->All,
-PlotRangePadding -> {1.1,1},
-ImageSize->500
+PlotRangePadding ->{1.1,1},
+ImageSize->Which[
+OptionValue["ImageSize"]=!=Automatic,OptionValue["ImageSize"],
+OptionValue["Portrait"]==False,500,
+OptionValue["Portrait"]==True,250]
 ];
 If[OptionValue["Labeled"],
 	Return@Grid[{{Text[ruleNumber " = " BaseForm[ruleNumber, 2]]},
@@ -780,24 +787,27 @@ TAStartRandomTorus[n_,d_:.5] :=TATorus[ArrayReshape[SparseArray@Transpose@{Table
 Options[TATorusPlot]={
 "ImageSize" -> Medium,
 "Time"->Null,
+"TimeColor"->aliveColor,
  "Padding"->Scaled[.03],
 "Parallel"->False,
 "Frame"->False,
 "FrameStyle" ->Automatic,
 "Rotation"->0,
 "Translation"->{0,0},
-"BoundaryDistance"->1/2,
-"EdgeThickness"->Scaled@.005
+"BorderSize"->4,
+"Shadow"->False
 };
 
 TATorusPlot[grid_,OptionsPattern[]]:=Module[
-{x,head,stateVector,displayedVerticesOdd,displayedVerticesEven,triangleEven, triangleOdd, trianglesEven={},trianglesOdd={},color,graphicsList={},evenLayered,oddLayered,coords,imageSize=OptionValue["ImageSize" ]},
+{x,head,layers,stateVector,displayedVerticesOdd,displayedVerticesEven,triangleEven, triangleOdd, trianglesEven={},trianglesOdd={},color,graphicsList={},evenLayered,oddLayered,coords,imageSize=OptionValue["ImageSize" ]},
 
-head=grid[[0]];
-stateVector=grid[[1]];
-coords=TACoordinatesT@layerFromOrder@Length@stateVector;
-coords=coords . RotationMatrix[-OptionValue["Rotation" ]];
-coords=(#+OptionValue["Translation" ])&/@coords;
+
+	head=grid[[0]];
+	stateVector=grid[[1]];
+	layers=layerFromOrderT@Length@stateVector;
+coords=TACoordinatesT@layers;
+	coords=coords . RotationMatrix[-OptionValue["Rotation" ]];
+	coords=(#+OptionValue["Translation" ])&/@coords;
 
 (*basic shapes*)
 triangleEven=Triangle[{{-1/Sqrt[3],0},{1/(2Sqrt[3]),1/2},{1/(2Sqrt[3]),-1/2}} . RotationMatrix[-OptionValue["Rotation" ]]];
@@ -817,9 +827,13 @@ trianglesEven=coords[[displayedVerticesEven]];
 AppendTo[graphicsList,aliveColor];
 If[trianglesEven!={},AppendTo[graphicsList,Translate[triangleEven,trianglesEven]]];
 If[trianglesOdd!={},AppendTo[graphicsList,Translate[triangleOdd,trianglesOdd]]];
-If[OptionValue["Time"]=!=Null,AppendTo[graphicsList,Text[Style[OptionValue["Time"],FontSize->Scaled@.06],Scaled[{.98,.01}],{Right,Bottom}]]];
+If[OptionValue["Time"]=!=Null,AppendTo[graphicsList,{OptionValue["TimeColor"],Text[Style[OptionValue["Time"],FontSize->Scaled@.06],Scaled[{.98,.01}],{Right,Bottom}]}]];
 
-PrependTo[graphicsList,{EdgeForm[Thickness@OptionValue["EdgeThickness"]],White,RegularPolygon[{OptionValue["BoundaryDistance" ]+1/(2Sqrt[3])+Norm@Last[coords]/2,Pi/2},6]}];
+PrependTo[graphicsList,{
+If[OptionValue["Shadow" ],Prepend[DropShadowing[{0,0},10,White]],Identity]@
+{Black,RegularPolygon[{(100+OptionValue["BorderSize" ])layers/100,Pi/2},6]},
+White,RegularPolygon[{layers,Pi/2},6]
+}];
 
 (*output with different Padding options*)
 If[OptionValue["ImageSize" ]=="Proportional",
@@ -828,12 +842,12 @@ imageSize=128*Norm@Last[coords];
 
 Return@Graphics[
 graphicsList,
-Background->deadColor,
+Background->Transparent,
 ImageSize->imageSize,
 Frame->OptionValue["Frame" ],
 FrameTicks->False,
 FrameStyle->OptionValue["FrameStyle" ],
-PlotRange->OptionValue["BoundaryDistance" ]+1/(2Sqrt[3])+Norm@Last[coords]/2,
+PlotRange->(100+OptionValue["BorderSize" ])layers/100{{-1,1},{-1,1}},
 PlotRegion->{{0,1},{0,1}},
 PlotRangePadding->OptionValue["Padding" ]
 
