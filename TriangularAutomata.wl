@@ -69,8 +69,9 @@ TADestroboscopify[n_]:={255-n,FromDigits[Reverse@IntegerDigits[n,2,8],2]};
 (*Grid*)
 
 
-TAGrid[states_?MatrixQ]:=TAGrid[states,0,0];
+TAGrid[states_?MatrixQ]:=TAGrid[states,0];
 TAGrid[states_?MatrixQ,universe_Integer]:=TAGrid[states,universe,0];
+TAGrid[states_?MatrixQ,universe_Integer,phase_Integer]:=TAGrid[states,universe,phase,Dimensions[states][[{2,1}]]*{-Sqrt[3]/4,1/4}];
 
 
 TAGrid[1]:=TAGrid[ArrayPad[{{1}},2,0],0,0];
@@ -88,17 +89,17 @@ TAGrid["TA"]:=TAGrid[{
 	{0,0,0,1,0,0,0,0,0}},0,0];
 
 
- TAGrid/:MakeBoxes[TAGrid[states_?MatrixQ,universe_,phase_Integer],form_]:=With[
+ TAGrid/:MakeBoxes[TAGrid[states_?MatrixQ,universe_,phase_Integer,coords_List],form_]:=With[
  {
  interpretation=Interpretation[
 Which[
 	Times@@Dimensions@states<=10000,
-	Deploy@TAPlot[TAGrid[states,universe,phase],ImageSize->Tiny,Frame->(universe===0)],
+	Deploy@TAPlot[TAGrid[states,universe,phase,coords],ImageSize->Tiny,Frame->(universe===0)],
 	Times@@Dimensions@states<=2000000,
-	Deploy@TAQuickPlot[TAGrid[states,universe,phase],ImageSize->Tiny,Frame->(universe===0)],
+	Deploy@TAQuickPlot[TAGrid[states,universe,phase,coords],ImageSize->Tiny,Frame->(universe===0)],
 	True,
-	Deploy@largeGridRepresentation[Dimensions@states,Total[Abs[states[[1,1]]-states],2],universe/.0:>White/.1:>Purple]
- ],TAGrid[states,universe,phase]]
+	Deploy@largeGridRepresentation[Dimensions@states,Total[Abs[states[[1,1]]-states],2],If[universe==0,White,Purple]]
+ ],TAGrid[states,universe,phase,coords]]
  },
  MakeBoxes[interpretation,form]];
 
@@ -115,14 +116,14 @@ Spacer[0]
 }}],FrameMargins->4];
 
 
-TAPad[TAGrid[s_?MatrixQ,u_Integer,p_Integer]]:=Module[{states=s,universe=u,phase=p,pad},
+TAPad[TAGrid[s_?MatrixQ,u_Integer,p_Integer,c_List]]:=Module[{states=s,universe=u,phase=p,coords=c,pad},
 pad[n_]:={Boole@*MemberQ[1-universe]/@states[[{n,-n},;;]],Boole@*MemberQ[1-universe]/@Transpose@states[[;;,{n,-n}]]};
 pad=2pad[1]+pad[2]/.x_Integer:>Min[2,x];
 states=ArrayPad[states,pad,universe];
 phase=Mod[phase+Boole@OddQ[pad[[1,1]]+pad[[2,1]]],2];
-Return@TAGrid[states,universe,phase];
+coords+=pad[[{2,1},1]]*{-Sqrt[3]/2,1/2};
+Return@TAGrid[states,universe,phase,coords];
 ];
-TAPad[TAGrid[s_?MatrixQ,u_List,p_Integer]]:=TAGrid[s,u,p];
 
 
 (* ::Section:: *)
@@ -153,8 +154,8 @@ Return@grids;
 Options[TAEvolve]={"Pad"->True};
 
 TAEvolve[g_TAGrid,r_Integer,OptionsPattern[]]:=Module[
-{grid=If[OptionValue["Pad"],TAPad[g],g],states,universe,phase,digits,config,dims,padRight},
-states=grid[[1]];universe=grid[[2]];phase=grid[[3]];
+{grid=If[OptionValue["Pad"],TAPad[g],g],states,universe,phase,coords,digits,config,dims,padRight},
+states=grid[[1]];universe=grid[[2]];phase=grid[[3]];coords=grid[[4]];
 
 dims=Dimensions@states;
 digits=Reverse@IntegerDigits[r,2,8];
@@ -172,7 +173,7 @@ config[[1+phase;;;;2]]+=RotateLeft[states][[1+phase;;;;2]];
 config[[2-phase;;;;2]]+=RotateRight[states][[2-phase;;;;2]];
 states=ArrayReshape[digits[[config+1]],dims];
 
-Return@TAGrid[states,universe,phase];
+Return@TAGrid[states,universe,phase,coords];
 
 ];
 
@@ -181,12 +182,12 @@ Return@TAGrid[states,universe,phase];
 (*Plot*)
 
 
-Options[TAPlot]={ImageSize->Medium,Frame->False,FrameTicks->None,PlotRangePadding->Scaled[.03]};
+Options[TAPlot]={ImageSize->Medium,Frame->False,FrameTicks->None,PlotRange->Automatic,PlotRangePadding->Scaled[.03]};
 
-TAPlot[TAGrid[s_?MatrixQ,u_,p_Integer],OptionsPattern[]]:=Module[{
+TAPlot[TAGrid[s_?MatrixQ,u_Integer,p_Integer,c_List],OptionsPattern[]]:=Module[{
 states=s,universe=If[IntegerQ@u,u,0],phase=p,
-triangleLeft=Triangle[{{-Sqrt[3]/4,0},{Sqrt[3]/4,1/2},{Sqrt[3]/4,-1/2}}],
-triangleRight=Triangle[{{Sqrt[3]/4,0},{-Sqrt[3]/4,1/2},{-Sqrt[3]/4,-1/2}}],
+triangleLeft=Triangle[#+c&/@{{-Sqrt[3]/4,0},{Sqrt[3]/4,1/2},{Sqrt[3]/4,-1/2}}],
+triangleRight=Triangle[#+c&/@{{Sqrt[3]/4,0},{-Sqrt[3]/4,1/2},{-Sqrt[3]/4,-1/2}}],
 graphics,positions
 },
 
@@ -204,6 +205,7 @@ Return@Graphics[graphics,
 	ImageSize->OptionValue[ImageSize],
 	Frame->OptionValue[Frame],
 	FrameTicks->OptionValue[FrameTicks],
+	PlotRange->OptionValue[PlotRange],
 	PlotRangePadding->OptionValue[PlotRangePadding]
 ];
 ];
