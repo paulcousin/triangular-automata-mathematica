@@ -71,7 +71,7 @@ TADestroboscopify[n_]:={255-n,FromDigits[Reverse@IntegerDigits[n,2,8],2]};
 
 TAGrid[states_?MatrixQ]:=TAGrid[states,0];
 TAGrid[states_?MatrixQ,universe_Integer]:=TAGrid[states,universe,0];
-TAGrid[states_?MatrixQ,universe_Integer,phase_Integer]:=TAGrid[states,universe,phase,(Dimensions[states][[{2,1}]]+1)*{-Sqrt[3]/4,1/4}];
+TAGrid[states_?MatrixQ,universe_Integer,phase_Integer]:=TAGrid[states,universe,phase,(Dimensions[states][[{2,1}]]-1)*{-Sqrt[3]/4,1/4}];
 
 
 TAGrid[1]:=TAGrid[ArrayPad[{{1}},2,0],0,0];
@@ -192,7 +192,7 @@ graphics,positions
 },
 
 graphics={If[universe===1,White,Purple]};
-positions=Position[states,1-If[IntegerQ@universe,universe,1]];
+positions=Position[states,1-If[IntegerQ@universe,universe,1]]-1;
 
 positions=Select[positions,#@*Total]&/@{EvenQ,OddQ}/.{y_Integer,x_Integer}:>{x*Sqrt[3]/2,-y/2};
 If[phase==1,positions//=Reverse];
