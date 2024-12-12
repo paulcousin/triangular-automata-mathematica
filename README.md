@@ -1,2 +1,3 @@
-# triangular-automata-mathematica
-Informations here: http://paulcousin.github.io/triangular-automata-mathematica
+# Triangular Automata
+## Mathematica Package
+More information here: https://triangular-automata.net/
