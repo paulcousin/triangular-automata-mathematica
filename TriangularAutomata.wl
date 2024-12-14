@@ -234,8 +234,7 @@ Return@Graphics[graphics,
 	FrameTicks->OptionValue[FrameTicks],
 	PlotRange->If[OptionValue[PlotRange]==Full,
 		Transpose@{c-{Sqrt[3]/4,-1/2},c+Dimensions[states][[{2,1}]]*{Sqrt[3]/2,-1/2}-{Sqrt[3]/4,0}},
-		Evaluate@OptionValue[PlotRange]
-	],
+		Evaluate@OptionValue[PlotRange]],
 	PlotRangePadding->OptionValue[PlotRangePadding]
 ];
 ];
@@ -252,35 +251,45 @@ ArrayPlot[states,
 ]];
 
 
-TAConfigurationPlot[c_]:=
-Graphics[{
-If[c<4,White,Purple], If[c<4,EdgeForm[Thickness@Small],EdgeForm[None]],
-	Triangle[{{-(1/Sqrt[3]),0},{1/(2 Sqrt[3]),1/2},{1/(2 Sqrt[3]),-(1/2)}}], 
-If[Mod[c,4]>0,Purple,White],If[Mod[c,4]>0,EdgeForm[None],EdgeForm[Thickness@Small]],
-	Translate[Triangle[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}}],1.1{{1/Sqrt[3],0}}],
-If[Mod[c,4]>1,Purple,White],If[Mod[c,4]>1,EdgeForm[None],EdgeForm[Thickness@Small]],
-	Translate[Triangle[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}}],1.1{{1/Sqrt[3]-Sqrt[3]/2,1/2}}],
-If[Mod[c,4]>2,Purple,White],If[Mod[c,4]>2,EdgeForm[None],EdgeForm[Thickness@Small]],
-	Translate[Triangle[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}}], 1.1{{1/Sqrt[3]-Sqrt[3]/2,-(1/2)}}]
-},ImageSize->{45,45}];
+(* ::Subsection:: *)
+(*Rules*)
+
+
+TAConfigurationPlot[c_]:=Module[{
+	i,graphics, shift=1.1,
+	coords={{-1/2*1/Sqrt[3], -1/2}, {-1/2*1/Sqrt[3], 1/2},{1/Sqrt[3], 0}},
+	tLeft=Triangle[{{-(1/Sqrt[3]),0},{1/(2 Sqrt[3]),1/2},{1/(2 Sqrt[3]),-(1/2)}}],
+	tRight=Triangle[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}}]
+},
+graphics={If[c<4,{White,EdgeForm[Thickness@Small],tLeft,Purple,EdgeForm[None]},{Purple,EdgeForm[None],tLeft}]};
+Do[
+	If[Mod[c,4]<i,AppendTo[graphics,{White,EdgeForm[Thickness@Small]}]];
+	AppendTo[graphics,{Translate[tRight,shift*coords[[i]]]}];
+,{i,3}];
+Return@Graphics[Catenate@graphics,ImageSize->{45,45}];
+];
 
 
 (* ::Input::Initialization:: *)
-TATransformationPlot[before_,after_]:=
-Graphics[{
-Inset[TAConfigurationPlot[before],{-1.3,0},Automatic,Scaled@1],Text[Style["\[Rule]",FontSize->Scaled@.25],Scaled@{.5,.528}],Inset[
-Graphics[{
-If[after==0,White,Purple], If[after==0,EdgeForm[Thickness@Small],EdgeForm[None]],
-	Triangle[{{-(1/Sqrt[3]),0},{1/(2 Sqrt[3]),1/2},{1/(2 Sqrt[3]),-(1/2)}}],
-unknownColor,EdgeForm[None],
-	Translate[Triangle[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}}],1.1{{1/Sqrt[3],0}}],
-	Translate[Triangle[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}}],1.1{{1/Sqrt[3]-Sqrt[3]/2,1/2}}],
-	Translate[Triangle[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}}], 1.1{{1/Sqrt[3]-Sqrt[3]/2,-(1/2)}}]
-}],{1.3,0},Automatic,Scaled@1]
-}];
+TATransformationPlot[before_,after_]:=Module[
+{
+graphics, shift=1.1,
+	tLeft=Triangle[{{-(1/Sqrt[3]),0},{1/(2 Sqrt[3]),1/2},{1/(2 Sqrt[3]),-(1/2)}}],
+	tRight=Triangle[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}}]
+},
+graphics={
+Inset[TAConfigurationPlot[before],{-1.3,0},Automatic,Scaled@1],
+Text[Style["\[Rule]",FontSize->Scaled@.25],Scaled@{.5,.528}],
+Inset[Graphics[{
+If[after==0,White,Purple],If[after==0,EdgeForm[Thickness@Small],EdgeForm[None]],tLeft,
+		Translate[{unknownColor,EdgeForm[None],tRight},shift{{1/Sqrt[3],0},{1/Sqrt[3]-Sqrt[3]/2,1/2},{1/Sqrt[3]-Sqrt[3]/2,-(1/2)}}]
+	}],{1.3,0},Automatic,Scaled@1]
+};
+Return@Graphics[graphics];
+];
 
 
-Options[TARulePlot]={"Labeled"->False,"Portrait"->False,"Frame"->True,"ImageSize"->Automatic};
+Options[TARulePlot]={"Labeled"->False,"Portrait"->False,Frame->True,ImageSize->Automatic};
 
 TARulePlot[rN_,OptionsPattern[]] :=Module[{ruleNumber=rN,graphicsGrid},
 graphicsGrid=Graphics[
@@ -290,14 +299,14 @@ Inset[
 	Automatic,
 	If[OptionValue["Portrait"]==False,Scaled@.32,Scaled@.45]
 ]&/@Range[7,0,-1], 
-Frame->OptionValue["Frame"], FrameTicks->None, FrameStyle->Thick,
+Frame->OptionValue[Frame], FrameTicks->None, FrameStyle->Thick,
 Background->White,
 ImagePadding->None, ImageMargins->None,
 AspectRatio->If[OptionValue["Portrait"]==False,1/3.5,1.2],
 PlotRange->All,
 PlotRangePadding ->{1.1,1},
 ImageSize->Which[
-OptionValue["ImageSize"]=!=Automatic,OptionValue["ImageSize"],
+OptionValue[ImageSize]=!=Automatic,OptionValue[ImageSize],
 OptionValue["Portrait"]==False,500,
 OptionValue["Portrait"]==True,250]
 ];
