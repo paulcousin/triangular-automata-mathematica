@@ -25,8 +25,13 @@ TANegativeRule::usage="TANegativeRule[rule]"
 TADestroboscopify::usage="TADestroboscopify[rule]"
 
 TAGrid::usage="TAGrid[states,universe,phase]"
-
+TARandom::usage="TARandom[{x,y}] creates a x-by-y random grid.\n"<>
+				"TARandom[{x,y},d] creates a random grid with density d.\n"<>
+				"TARandom[{x,y},d,u] creates a random grid with the universe in state u.\n"<>
+				"TARandom[{x,y},d,u,p] creates arandom grid with phase p."
+				
 TAPad::usage="TAPad[grid]"
+TAEdit::usage="TAEdit[grid]"
 
 TAEvolve::usage="TAEvolve[rule][grid] evolves the grid once.\n"<>
 				"TAEvolve[grid,rule] evolves the grid once.\n"<>
@@ -74,9 +79,9 @@ TAGrid[states_?MatrixQ,universe_Integer]:=TAGrid[states,universe,0];
 TAGrid[states_?MatrixQ,universe_Integer,phase_Integer]:=TAGrid[states,universe,phase,(Dimensions[states][[{2,1}]]-1)*{-Sqrt[3]/4,1/4}];
 
 
-TAGrid[1]:=TAGrid[ArrayPad[{{1}},2,0],0,0];
-TAGrid[0]:=TAGrid[ArrayPad[{{0}},2,1],1,0];
-TAGrid["Hexagon"]:=TAGrid[{{1,1},{1,1},{1,1}},0,0];
+TAGrid[1]:=TAGrid[ArrayPad[{{1}},2,0]];
+TAGrid[0]:=TAGrid[ArrayPad[{{0}},2,1],1];
+TAGrid["Hexagon"]:=TAGrid[{{1,1},{1,1},{1,1}}];
 TAGrid["TA"]:=TAGrid[{
 	{0,0,0,0,1,1,0,0,0},
 	{0,0,0,0,1,1,1,0,0},
@@ -86,7 +91,10 @@ TAGrid["TA"]:=TAGrid[{
 	{1,0,1,0,1,0,0,0,0},
 	{0,0,1,0,1,0,0,0,0},
 	{0,0,0,0,0,0,0,0,0},
-	{0,0,0,1,0,0,0,0,0}},0,0];
+	{0,0,0,1,0,0,0,0,0}}];
+
+
+TARandom[{x_Integer,y_Integer},d_:0.5,u_:0,p_:0]:=TAGrid[RandomVariate[BernoulliDistribution[Abs[d-u]],{y,x}],u,p];
 
 
  TAGrid/:MakeBoxes[TAGrid[states_?MatrixQ,universe_,phase_Integer,coords_List],form_]:=With[
@@ -124,6 +132,26 @@ phase=Mod[phase+Boole@OddQ[pad[[1,1]]+pad[[2,1]]],2];
 coords+=pad[[{2,1},1]]*{-Sqrt[3]/2,1/2};
 Return@TAGrid[states,universe,phase,coords];
 ];
+
+
+Options[TAEdit]={ImageSize -> Large};
+
+TAEdit[g_TAGrid,OptionsPattern[]]:=DialogInput[DynamicModule[
+{grid=g,firstCoord=g[[4]],phase=g[[3]],dims=Dimensions@g[[1]],shift=1/(4*Sqrt[3]),coords},
+coords=Transpose@CoordinateBoundsArray[{{firstCoord[[1]],firstCoord[[1]]+(dims[[2]]-1)Sqrt[3]/2},{firstCoord[[2]],firstCoord[[2]]-(dims[[1]]-1)/2}},{Sqrt[3]/2,-1/2}];
+coords[[1+phase;;;;2,1;;;;2]]=Map[#+{shift,0}&,coords[[1+phase;;;;2,1;;;;2]],{2}];
+coords[[2-phase;;;;2,1;;;;2]]=Map[#-{shift,0}&,coords[[2-phase;;;;2,1;;;;2]],{2}];
+coords[[2-phase;;;;2,2;;;;2]]=Map[#+{shift,0}&,coords[[2-phase;;;;2,2;;;;2]],{2}];
+coords[[1+phase;;;;2,2;;;;2]]=Map[#-{shift,0}&,coords[[1+phase;;;;2,2;;;;2]],{2}];
+Print[{dims,Dimensions@coords}];
+Column[{
+ClickPane[
+Dynamic@TAPlot[grid,ImageSize->OptionValue[ImageSize],PlotRange->Full,PlotRangePadding->None,Frame->True],
+Module[{index=Nearest[Catenate[coords]->"Index",#][[1]],x,y},
+x=1+Mod[index-1,dims[[2]]];y=1+Quotient[index-1,dims[[2]]];
+grid[[1,y,x]]=1-grid[[1,y,x]]
+]&],Button["Done",DialogReturn@grid]}]
+]];
 
 
 (* ::Section:: *)
@@ -205,7 +233,10 @@ Return@Graphics[graphics,
 	ImageSize->OptionValue[ImageSize],
 	Frame->OptionValue[Frame],
 	FrameTicks->OptionValue[FrameTicks],
-	PlotRange->OptionValue[PlotRange],
+	PlotRange->If[OptionValue[PlotRange]==Full,
+		Transpose@{c-{Sqrt[3]/4,-1/2},c+Dimensions[states][[{2,1}]]*{Sqrt[3]/2,-1/2}-{Sqrt[3]/4,0}},
+		Evaluate@OptionValue[PlotRange]
+	],
 	PlotRangePadding->OptionValue[PlotRangePadding]
 ];
 ];
