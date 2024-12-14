@@ -143,7 +143,6 @@ coords[[1+phase;;;;2,1;;;;2]]=Map[#+{shift,0}&,coords[[1+phase;;;;2,1;;;;2]],{2}
 coords[[2-phase;;;;2,1;;;;2]]=Map[#-{shift,0}&,coords[[2-phase;;;;2,1;;;;2]],{2}];
 coords[[2-phase;;;;2,2;;;;2]]=Map[#+{shift,0}&,coords[[2-phase;;;;2,2;;;;2]],{2}];
 coords[[1+phase;;;;2,2;;;;2]]=Map[#-{shift,0}&,coords[[1+phase;;;;2,2;;;;2]],{2}];
-Print[{dims,Dimensions@coords}];
 Column[{
 ClickPane[
 Dynamic@TAPlot[grid,ImageSize->OptionValue[ImageSize],PlotRange->Full,PlotRangePadding->None,Frame->True],
