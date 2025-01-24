@@ -38,12 +38,17 @@ TAEvolve::usage="TAEvolve[rule][grid] evolves the grid once.\n"<>
 				"TAEvolve[grid,rule,n] evolves the grid n times.\n"<>
 				"TAEvolve[grid,{\!\(\*SubscriptBox[\(r\), \(1\)]\),...,\!\(\*SubscriptBox[\(r\), \(m\)]\)},n] evolves the grid n times alternating between the different rules.";
 
+TASlice::usage="TASlice[grid,rule,steps]"
+TASlicePlot::usage="TASlicePlot[slice]"
+
 TAPlot::usage="TAPlot[grid] plots grid."
 TAQuickPlot::usage="TAQuickPlot[grid] plots grid efficiently."
 
 TAConfigurationPlot::usage="TAQuickPlot[configuration]"
 TARulePlot::usage="TARulePlot[rule]"
 
+TAOEISExport::usage="TAOEISExport[sequenceNumber,data] exports the sequence with and offset of 0.\n"<>
+					"TAOEISExport[sequenceNumber,data,offset]"
 
 
 Begin["`Private`"];
@@ -158,6 +163,8 @@ grid[[1,y,x]]=1-grid[[1,y,x]]
 
 
 TAEvolve[r_Integer]=TAEvolve[#,r]&
+TAEvolve[r_Integer,n_Integer]=TAEvolve[#,r,n]&
+TAEvolve[r_Integer,{n_Integer}]=TAEvolve[#,r,{n}]&
 
 
 TAEvolve[g_TAGrid,r_,n_Integer]:=Module[{grid=g,i,rule=If[ListQ@r,r,{r}]},
@@ -206,15 +213,59 @@ Return@TAGrid[states,universe,phase,coords];
 
 
 (* ::Section:: *)
+(*Slice*)
+
+
+TASlice[g_TAGrid,r_Integer,s_Integer]:=Module[
+{grid=g,rule=r,steps=s,slice={},i,dims},
+
+dims=Dimensions@grid[[1]];AppendTo[slice, {grid[[1,All,1+(dims[[2]]-1)/2]],grid[[2]]}];
+
+Monitor[Do[
+
+grid=TAEvolve[grid,rule,"Pad"->False];
+grid=TAGrid[ArrayPad[grid[[1]],
+				2*Boole/@{{Mod[i,2]==0,Mod[i,2]==0},{Mod[i,4]==0,Mod[i,4]==0}},
+				grid[[2]]
+			],grid[[2]],0];
+
+		dims=Dimensions@grid[[1]];AppendTo[slice, {grid[[1,All,1+(dims[[2]]-1)/2]],grid[[2]]}];
+
+	,{i,s}];
+
+Return[ArrayPad[#[[1]],(dims[[1]]-Length[#[[1]]])/2,#[[2]]] &/@slice];
+	
+,Grid[{{ProgressIndicator[i,{1,s}],"step "<>ToString[i]<>" of "<>ToString[s]}}]
+]];
+
+
+Options[TASlicePlot]={ImageSize->Medium};
+
+TASlicePlot[s_List,OptionsPattern[]]:=ArrayPlot[s,
+		ColorRules->{1->Purple,0->White},
+		ImageSize->OptionValue[ImageSize]
+	];
+
+
+(* ::Section:: *)
 (*Plot*)
 
 
-Options[TAPlot]={ImageSize->Medium,Frame->False,FrameTicks->None,PlotRange->Automatic,PlotRangePadding->Scaled[.03]};
+Options[TAPlot]={
+	ImageSize->Medium,
+	Frame->False,
+	FrameTicks->None,
+	FrameStyle->Automatic,
+	PlotRange->Automatic,
+	PlotRangePadding->Scaled[.03],
+	"Translation"->{0,0},
+	"Time"->Null
+};
 
 TAPlot[TAGrid[s_?MatrixQ,u_Integer,p_Integer,c_List],OptionsPattern[]]:=Module[{
 states=s,universe=If[IntegerQ@u,u,0],phase=p,
-triangleLeft=Triangle[#+c&/@{{-Sqrt[3]/4,0},{Sqrt[3]/4,1/2},{Sqrt[3]/4,-1/2}}],
-triangleRight=Triangle[#+c&/@{{Sqrt[3]/4,0},{-Sqrt[3]/4,1/2},{-Sqrt[3]/4,-1/2}}],
+triangleLeft=Triangle[#+c+OptionValue["Translation"]&/@{{-Sqrt[3]/4,0},{Sqrt[3]/4,1/2},{Sqrt[3]/4,-1/2}}],
+triangleRight=Triangle[#+c+OptionValue["Translation"]&/@{{Sqrt[3]/4,0},{-Sqrt[3]/4,1/2},{-Sqrt[3]/4,-1/2}}],
 graphics,positions
 },
 
@@ -227,11 +278,16 @@ If[phase==1,positions//=Reverse];
 If[positions[[1]]!={},AppendTo[graphics,Translate[triangleLeft,positions[[1]]]]];
 If[positions[[2]]!={},AppendTo[graphics,Translate[triangleRight,positions[[2]]]]];
 
+If[OptionValue["Time"]=!=Null,AppendTo[graphics,
+Text[Style[OptionValue["Time"],FontSize->Scaled@.06],Scaled[{.98,.02}],{Right,Bottom}]
+]];
+
 Return@Graphics[graphics,
 	Background->If[universe===1,Purple,White],
 	ImageSize->OptionValue[ImageSize],
 	Frame->OptionValue[Frame],
 	FrameTicks->OptionValue[FrameTicks],
+	FrameStyle->OptionValue[FrameStyle],
 	PlotRange->If[OptionValue[PlotRange]==Full,
 		Transpose@{c-{Sqrt[3]/4,-1/2},c+Dimensions[states][[{2,1}]]*{Sqrt[3]/2,-1/2}-{Sqrt[3]/4,0}},
 		Evaluate@OptionValue[PlotRange]],
@@ -255,15 +311,19 @@ ArrayPlot[states,
 (*Rules*)
 
 
-TAConfigurationPlot[c_]:=Module[{
+Options[TAConfigurationPlot]={
+	"EdgeThickness" -> Thickness@Small
+};
+
+TAConfigurationPlot[c_,OptionsPattern[]]:=Module[{
 	i,graphics, shift=1.1,
 	coords={{-1/2*1/Sqrt[3], -1/2}, {-1/2*1/Sqrt[3], 1/2},{1/Sqrt[3], 0}},
 	tLeft=Triangle[{{-(1/Sqrt[3]),0},{1/(2 Sqrt[3]),1/2},{1/(2 Sqrt[3]),-(1/2)}}],
 	tRight=Triangle[{{1/Sqrt[3],0},{-(1/(2 Sqrt[3])),1/2},{-(1/(2 Sqrt[3])),-(1/2)}}]
 },
-graphics={If[c<4,{White,EdgeForm[Thickness@Small],tLeft,Purple,EdgeForm[None]},{Purple,EdgeForm[None],tLeft}]};
+graphics={If[c<4,{White,EdgeForm[OptionValue["EdgeThickness"]],tLeft,Purple,EdgeForm[None]},{Purple,EdgeForm[None],tLeft}]};
 Do[
-	If[Mod[c,4]<i,AppendTo[graphics,{White,EdgeForm[Thickness@Small]}]];
+	If[Mod[c,4]<i,AppendTo[graphics,{White,EdgeForm[OptionValue["EdgeThickness"]]}]];
 	AppendTo[graphics,{Translate[tRight,shift*coords[[i]]]}];
 ,{i,3}];
 Return@Graphics[Catenate@graphics,ImageSize->{45,45}];
@@ -315,6 +375,20 @@ If[OptionValue["Labeled"],
 	{graphicsGrid}}],
 	Return@graphicsGrid
 ];
+];
+
+
+(* ::Section:: *)
+(*OEIS*)
+
+
+TAOEISExport[sequenceNumber_,data_,offset_:0]:=Module[{bfilename,bfiledata,bfile},
+	bfilename=FileNameJoin[{NotebookDirectory[],"b"<>ToString[sequenceNumber]<>".txt"}];
+	bfiledata=({#,data[[#-offset+1]]}&/@Range[offset,offset+Length@data-1]);
+
+	bfile=OpenWrite[bfilename, BinaryFormat->True, CharacterEncoding->"Unicode"]; 
+	WriteString[bfile, ToString[#[[1]]]<>" "<>ToString[#[[2]]]<>"\n"]&/@bfiledata;
+	Close[bfile]
 ];
 
 
