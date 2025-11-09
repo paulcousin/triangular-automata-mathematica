@@ -1,2 +1,3 @@
 # Triangular Automata Mathematica Package
-More information here: https://triangular-automata.net/
+Package demonstration: https://triangular-automata.net/code.html
+More information: https://triangular-automata.net/
